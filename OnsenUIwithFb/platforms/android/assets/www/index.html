@@ -6,7 +6,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="mobile-web-app-capable" content="yes" />
     <!-- Firebase Init -->
-    <script src="https://www.gstatic.com/firebasejs/3.6.1/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.6.2/firebase.js"></script>
 
     <script>
   // Initialize Firebase
@@ -39,9 +39,18 @@
     <!-- Login and Signup -->
     <ons-navigator id="mainNavigator" page="sp.html" animation="slide"></ons-navigator>
     <ons-template id="sp.html">
-        <ons-page id="sp">
-        </ons-page>
-    </ons-template>
+            <ons-page id="sp">
+                <section style="padding: 8px">
+                    <div style="text-align: center; font-size: 30px; margin-top: 20px; color: #000;">
+                        Wall-Play
+                    </div>
+                    <div style="text-align: center; font-size: 30px; margin-top: 20px; color: #000;">
+                        Connecting....
+                        <ons-progress-circular value="0" id="progessBar"></ons-progress-circular>
+                    </div>
+                </section>
+            </ons-page>
+</ons-template>
     <ons-template id="login.html">
         <ons-page id="login">
             <ons-toolbar>
@@ -104,7 +113,9 @@
                     </div>
                 </div>
                 <div class="right">
-                    <ons-toolbar-button id="uwallBtn">+</ons-toolbar-button>
+                    <ons-toolbar-button id="uwallBtn"> <input type="file" name="fileToUpload" id="fileToUpload" accept="image/*" capture="camera"
+                               style="width: 0.1px;height: 0.1px;opacity: 0;overflow: hidden;position: absolute;z-index: -1;" />
+                        <label for="fileToUpload">+</label></ons-toolbar-button>
                 </div>
             </ons-toolbar>
             <section style="padding: 8px">
@@ -129,30 +140,7 @@
         </ons-page>
     </ons-template>
     <!--Main end-->
-    <!--Uploading page-->
-    <ons-template id="uwall.html">
-        <ons-page id="uwall">
-            <ons-toolbar>
-                <div class="left"><ons-back-button>Back</ons-back-button></div>
-                <div class="center">
-                    Upload Wallpaper
-                </div>
-            </ons-toolbar>
-            <section style="padding: 8px">
-                <div style="text-align: center; font-size: 30px; margin-top: 20px; color: #fff;">
 
-                    <ons-if platform="ios android windows">
-                        <ons-button id="cameraTakePicture">Select wallpaper to upload</ons-button>
-                    </ons-if>
-                    <ons-if platform="other">
-                        <ons-input type="file" id="cameraTakePicture">Select wallpaper to upload</ons-input>
-                    </ons-if>
-                    <img id="myImage" />
-                </div>
-            </section>
-        </ons-page>
-    </ons-template>
-    <!--Uploading page end-->
     <!--Profile page-->
     <ons-template id="profile.html">
         <ons-page id="profile">
@@ -181,6 +169,7 @@
         </ons-page>
     </ons-template>
     <!--Profile page end-->
+
     <!--Account page-->
     <ons-template id="myAcc.html">
         <ons-page id="myAcc">
@@ -209,6 +198,7 @@
         </ons-page>
     </ons-template>
     <!--Account page end-->
+
     <!--downloading info  temp-->
     <ons-template id="downloading.html">
         <ons-dialog id="downloadingid">
@@ -220,6 +210,16 @@
         </ons-dialog>
     </ons-template>
     <!--downloading info temp end-->
+    <!--Uploading dialog-->
+    <ons-dialog id="uploadingDialog">
+        <div style="text-align: center; padding: 10px;">
+            <p id="whileUploading">
+                  <ons-progress-circular value="0" id="progessBar"></ons-progress-circular>
+            <p>
+        </div>
+    </ons-dialog>
+    <!--Uploading dialog End-->
+
     <!-- Cordova reference -->
     <script src="cordova.js"></script>
     <script src="scripts/index.js"></script>

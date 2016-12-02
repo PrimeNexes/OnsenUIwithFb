@@ -1,22 +1,36 @@
 ﻿//Main
 
+
 document.addEventListener('init', function (event) {
+
+    firebase.database().goOnline();
+    var wKey;
+    function setwKey(keyData)
+    { wKey = keyData; }
+    var paperCountRef = firebase.database().ref().child('wKey');
+    paperCountRef.on('value', snap => setwKey(snap.val()));
     var page = event.target;
     if (page.id === 'sp') {
         const promise = firebase.auth().onAuthStateChanged(function (user) {
-            if (user) {
-                document.querySelector('#mainNavigator').pushPage('home.html');
-            }
-            else {
-                document.querySelector('#mainNavigator').pushPage('login.html');
-            }
-        });
+                if (user) {
+                    document.querySelector('#mainNavigator').pushPage('home.html');
+                    console.log(wKey);
+      
+                }
+                else {
+                    console.log(wKey);
+                    document.querySelector('#mainNavigator').pushPage('login.html');
+    
+                }
+            
+            });
+        
 
     }
 
     if (page.id === 'login') {
         //If Already Logged in
-
+   
         //If Already Logged in End
         page.querySelector('#loginBtn').onclick = function () {
             //Login Auth
@@ -101,6 +115,7 @@ document.addEventListener('init', function (event) {
     }
     else if (page.id == 'home') {
         console.log("HOME");
+        console.log(wKey);
         //MyAccount
         page.querySelector('#myAccBtn').onclick = function () {
 
@@ -118,7 +133,8 @@ document.addEventListener('init', function (event) {
         };
 
         //Download
-        page.querySelector('#downloadBtn').onclick = function () {
+        page.querySelector('#downloadBtn').onclick = function ()
+        {
 
             var dialog = document.getElementById('downloadingid');
 
@@ -136,15 +152,47 @@ document.addEventListener('init', function (event) {
         };
 
         //Poster's Profile
-        page.querySelector('#profileBtn').onclick = function () {
+        page.querySelector('#profileBtn').onclick = function ()
+        {
             document.querySelector('#mainNavigator').pushPage('profile.html');
 
         };
 
-        //Upload Wallpaper
-        page.querySelector('#uwallBtn').onclick = function () {
-            document.querySelector('#mainNavigator').pushPage('uwall.html');
-        };
+            //Uploading Wallpaper
+        page.querySelector('#fileToUpload').onchange = function ()
+        {
+           
+            document.getElementById('uploadingDialog').show();           
+            var fileTBU = document.getElementById('fileToUpload').files[0];
+            if (fileTBU && wKey) {
+                        var progressBar = document.getElementById('progessBar');
+                        console.log(wKey);
+                        var stroageRef = firebase.storage().ref('wid/' + wKey);
+                        var task = stroageRef.put(fileTBU);
+                        task.on('state_changed', function (snapshot) {
+                            var per = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                            progessBar.value = per;
+                        }, function (error) {
+                            document.getElementById('uploadingDialog').hide();
+                            ons.notification.alert("An error has occurred!" + error);
+                        }, function () {
+                            document.getElementById('uploadingDialog').hide();
+                            var upd = wKey+ 1;
+                            console.log(upd);
+                            firebase.database().ref().child('wKey').set(upd);
+                            ons.notification.alert("Uploaded Successfully");
+                        });
+                   
+                 
+                }
+                else {
+                    ons.notification.alert("Image can't be small than Heigh 1920 and Width 1080");
+                    document.getElementById('uploadingDialog').hide();
+                }
+                
+                //Uploading Wallpaper End
+          };
+           
 
 
     }
@@ -164,33 +212,6 @@ document.addEventListener('init', function (event) {
             //Logout End
         };
     }
-    else if (page.id == 'uwall') {
-
-        page.querySelector('#cameraTakePicture').onclick = function () {
-            //Uploading
-
-            navigator.camera.getPicture(onSuccess, onFail, {
-                quality: 50,
-                destinationType: Camera.DestinationType.DATA_URL,
-                sourceType: Camera.PictureSourceType.PHOTOLIBRARY
-            });
-
-            function onSuccess(imageURL) {
-                var image = document.getElementById('myImage');
-                image.src = imageURL;
-            }
-
-            function onFail(message) {
-                ons.notification.alert('Failed because: ' + message);
-            }
-
-
-
-            //Uploading End
-        };
-    }
 
 });
 //Main End
-
-

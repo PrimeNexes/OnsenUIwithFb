@@ -12,6 +12,12 @@
         },
         "cordova-plugin-whitelist": {
             "PACKAGE_NAME": "io.onsen.sampleapp"
+        },
+        "cordova-plugin-file": {
+            "PACKAGE_NAME": "io.onsen.sampleapp"
+        },
+        "cordova-plugin-file-transfer": {
+            "PACKAGE_NAME": "io.onsen.sampleapp"
         }
     },
     "dependent_plugins": {
