@@ -1,18 +1,36 @@
 ﻿//Main
 
-
 document.addEventListener('init', function (event) {
 
     firebase.database().goOnline();
+    //wallpaperKey
     var wKey;
+
     function setwKey(keyData)
-    { wKey = keyData; }
+    {
+        wKey = keyData;
+    }
     var paperCountRef = firebase.database().ref().child('wKey');
     paperCountRef.on('value', snap => setwKey(snap.val()));
+    //wallpaperURL funs
+    var wallURL;
+    function setWallpaperURL(urlData) {
+        wallURL = urlData;
+        console.log(wallURL);
+    }
+
+    function getWallpaper(wid) {
+        firebase.storage().ref('wid/' + wid + '.jpeg').getDownloadURL().then(function (url) { setWallpaperURL(url); console.log }).catch(function (error) { console.log("error in wid " + wid) });
+    }
+
+    //current wallpaper count
+    
+
     var page = event.target;
     if (page.id === 'sp') {
         const promise = firebase.auth().onAuthStateChanged(function (user) {
-                if (user) {
+            if (user) {
+               
                     document.querySelector('#mainNavigator').pushPage('home.html');
                     console.log(wKey);
       
@@ -71,7 +89,7 @@ document.addEventListener('init', function (event) {
     }
     else if (page.id === 'signup') {
         page.querySelector('#makeaccBtn').onclick = function () {
-            //Signin Auth
+            //Signup Auth
             var signinUser = document.getElementById('signinUser').value;
             var signinPass = document.getElementById('signinPass').value;
             console.log(signinPass + signinUser);
@@ -91,7 +109,11 @@ document.addEventListener('init', function (event) {
                     console.log("User Created with displayName " + n);
                     //Set Display name of user End
                     user.sendEmailVerification().then(function () {
+                        //create userDB 
+                        var userId = firebase.auth().currentUser.uid;
+                        firebase.database().ref('userDB/' + userId).set({ followedBy: { uid: true }, followedByInt: 0, following: { uid: true }, followedByInt: 0, uploads: { wid: true }, wallpaperLiked: { wid: true } });
                         ons.notification.alert('Account Created ! Please Verify your Email by typing the Verification code in your Profile');
+
                     }, function (error) {
                         ons.notification.alert(error);
                     });
@@ -110,12 +132,30 @@ document.addEventListener('init', function (event) {
                     console.log(errorMessage);
 
                 });
-            //Signin Auth End         
+            //Signup Auth End         
         };
     }
     else if (page.id == 'home') {
         console.log("HOME");
         console.log(wKey);
+        //Feed
+        firebase.storage().ref('wid/0.jpeg').getDownloadURL().then(function (url) { document.getElementById('wp' + '0').setAttribute('src', url); }).catch(function (error) { console.log("error in wid " +error); });
+ 
+        console.log(wallURL);
+            carousel.addEventListener('postchange', function (event) {
+                var carousel = document.getElementById('carousel');
+                console.log(event.activeIndex);
+
+               
+               
+                if (event.activeIndex === 3) {
+                    console.log("going in");
+                    carousel.first({ timing: 'ease-in' });
+
+                }
+            });
+
+        //Feed End
         //MyAccount
         page.querySelector('#myAccBtn').onclick = function () {
 
@@ -164,10 +204,11 @@ document.addEventListener('init', function (event) {
            
             document.getElementById('uploadingDialog').show();           
             var fileTBU = document.getElementById('fileToUpload').files[0];
-            if (fileTBU && wKey) {
+            console.log(wKey);
+            if (fileTBU) {
                         var progressBar = document.getElementById('progessBar');
                         console.log(wKey);
-                        var stroageRef = firebase.storage().ref('wid/' + wKey);
+                        var stroageRef = firebase.storage().ref('wid/' + wKey +'.jpeg');
                         var task = stroageRef.put(fileTBU);
                         task.on('state_changed', function (snapshot) {
                             var per = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
@@ -177,9 +218,17 @@ document.addEventListener('init', function (event) {
                             ons.notification.alert("An error has occurred!" + error);
                         }, function () {
                             document.getElementById('uploadingDialog').hide();
+                            //+1 wKey
                             var upd = wKey+ 1;
                             console.log(upd);
+                            //set the updated key
                             firebase.database().ref().child('wKey').set(upd);
+                            //get current user
+                            var userId = firebase.auth().currentUser.uid;
+                            //set wallpaper on db
+                            firebase.database().ref('wallpaperDB/' + wKey).set({ likes: 0, uid: userId });
+                            //set wallpaper on userdb
+                            firebase.database().ref('userDB/' + userId + '/uploads/'+wKey).set(true);
                             ons.notification.alert("Uploaded Successfully");
                         });
                    

@@ -119,23 +119,25 @@
                 </div>
             </ons-toolbar>
             <section style="padding: 8px">
-                <ons-carousel fullscreen swipeable auto-scroll overscrollable id="carousel" direction="vertical">
-                    <ons-carousel-item style="background-color: #085078;">
-                        <div style="text-align: center; font-size: 30px; margin-top: 20px; color: #fff;">
-                            Wallpaper BLUE
-                        </div>
+                <ons-carousel fullscreen swipeable auto-scroll auto-scroll-ratio="0.5" overscrollable id="carousel" direction="vertical">
+
+                    <ons-carousel-item style="background-color: #373B44;">   
+                            <img src="" style="width:inherit;height:inherit;" id="wp0" alt="Loading...."/>
                     </ons-carousel-item>
-                    <ons-carousel-item style="background-color: #373B44;">
-                        <div style="text-align: center; font-size: 30px; margin-top: 20px; color: #fff;">
-                            Wallpaper DARK
-                        </div>
+
+                    <ons-carousel-item style="background-color: #373B44;" >
+                        <img src="" style="width:inherit;height:inherit;" id="wp1" alt="Loading...."/>
                     </ons-carousel-item>
+
                     <ons-carousel-item style="background-color: #D38312;">
-                        <div style="text-align: center; font-size: 30px; margin-top: 20px; color: #fff;">
-                            Wallpaper ORANGE
-                        </div>
+                        <img src="" style="width:inherit;height:inherit;" id="wp2" alt="Loading...."/>
                     </ons-carousel-item>
-                </ons-carousel>
+
+                    <ons-carousel-item style="background-color: #D38312;">
+                        <img src="" style="width:inherit;height:inherit;" id="wp3" alt="Loading...."/>
+                    </ons-carousel-item>
+
+        </ons-carousel>
             </section>
         </ons-page>
     </ons-template>
@@ -163,7 +165,7 @@
                     </div>
                 </ons-list-item>
 
-                <ons-button modifier="large">Follow</ons-button>
+                <ons-button modifier="large" id="followBtn">Follow</ons-button>
 
             </section>
         </ons-page>
