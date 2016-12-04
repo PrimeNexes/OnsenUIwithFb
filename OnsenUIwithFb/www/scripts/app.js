@@ -1,11 +1,10 @@
 ﻿//Main
+
+
+
 document.addEventListener('init', function (event) {
 
     firebase.database().goOnline();
-
-
-
-
 
     var page = event.target;
     if (page.id === 'sp') {
@@ -120,12 +119,22 @@ document.addEventListener('init', function (event) {
 
         //Feed 
         var wall = document.getElementById('wall');
+        var postCount = 0;
         firebase.database().ref("wallpaperDB/").orderByChild('likes').on("child_added", function (data) {
-            firebase.storage().ref('wid/' + data.key + '.jpeg').getDownloadURL().then(function (url) {
-                
+            firebase.storage().ref('wid/' + data.key + '.jpeg').getDownloadURL().then(function (url) {              
+               
+                var userId = firebase.auth().currentUser.uid;
+                firebase.database().ref('/userDB/' + userId + '/uploads/' + data.key).once('value').then(function (snapshot) {
+                    wall.appendChild(ons._util.createElement('<img style="max-width:100%;" src="' + url + '" alt="Loading....."/>'));
+                    wall.appendChild(ons._util.createElement('<ons-button class="Liked" disabled="true"; modifier="large">Liked</ons-button>'));
 
-                wall.appendChild(ons._util.createElement('<img style="max-width:100%;" src="' + url + '" />'));
-            }).catch(function (error) { console.log("error in wid " + error); });
+                }).catch(function (error) {
+                    wall.appendChild(ons._util.createElement('<img style="max-width:100%;" src="' + url + '" alt="Loading....."/>'));
+                    wall.appendChild(ons._util.createElement('<ons-button class="nLiked" modifier="large">Like</ons-button>'));
+                });
+
+                 
+            }).catch(function (error) { console.log("Error :" + error); });
         });
 
 
