@@ -7,7 +7,6 @@
     <meta name="mobile-web-app-capable" content="yes" />
     <!-- Firebase Init -->
     <script src="https://www.gstatic.com/firebasejs/3.6.2/firebase.js"></script>
-
     <script>
   // Initialize Firebase
   var config = {
@@ -39,18 +38,18 @@
     <!-- Login and Signup -->
     <ons-navigator id="mainNavigator" page="sp.html" animation="slide"></ons-navigator>
     <ons-template id="sp.html">
-            <ons-page id="sp">
-                <section style="padding: 8px">
-                    <div style="text-align: center; font-size: 30px; margin-top: 20px; color: #000;">
-                        Wall-Play
-                    </div>
-                    <div style="text-align: center; font-size: 30px; margin-top: 20px; color: #000;">
-                        Connecting....
-                        <ons-progress-circular value="0" id="progessBar"></ons-progress-circular>
-                    </div>
-                </section>
-            </ons-page>
-</ons-template>
+        <ons-page id="sp">
+            <section style="padding: 8px">
+                <div style="text-align: center; font-size: 30px; margin-top: 20px; color: #000;">
+                    Wall-Play
+                </div>
+                <div style="text-align: center; font-size: 30px; margin-top: 20px; color: #000;">
+                    Connecting....
+                    <ons-progress-circular value="0" id="progessBar"></ons-progress-circular>
+                </div>
+            </section>
+        </ons-page>
+    </ons-template>
     <ons-template id="login.html">
         <ons-page id="login">
             <ons-toolbar>
@@ -71,7 +70,7 @@
                         <ons-button modifier="large" id="signupBtn">Sign up</ons-button>
                     </p>
                 </div>
-                <p id="bigOne"></p>
+
             </section>
         </ons-page>
     </ons-template>
@@ -113,30 +112,25 @@
                     </div>
                 </div>
                 <div class="right">
-                    <ons-toolbar-button id="uwallBtn"> <input type="file" name="fileToUpload" id="fileToUpload" accept="image/*" capture="camera"
+                    <ons-toolbar-button id="uwallBtn">
+                        <input type="file" name="fileToUpload" id="fileToUpload" accept="image/*" capture="camera"
                                style="width: 0.1px;height: 0.1px;opacity: 0;overflow: hidden;position: absolute;z-index: -1;" />
-                        <label for="fileToUpload">+</label></ons-toolbar-button>
+                        <label for="fileToUpload">+</label>
+                    </ons-toolbar-button>
                 </div>
             </ons-toolbar>
-            <section style="padding: 8px">
-                <ons-carousel fullscreen swipeable auto-scroll auto-scroll-ratio="0.5" overscrollable id="carousel" direction="vertical">
-                    <ons-carousel-item style="background-color: #085078;">   
-                            <img src="" style="width:inherit;height:inherit;" id="wp0" />
-                    </ons-carousel-item>
-                    <ons-carousel-item style="background-color: #373B44;" >
-                        <img src="" style="width:inherit;height:inherit;" id="wp1" />
-                    </ons-carousel-item>
-                    <ons-carousel-item style="background-color: #D38312;">
-                        <img src="" style="width:inherit;height:inherit;" id="wp2" />
-                    </ons-carousel-item>
-                    <ons-carousel-item >
-                    </ons-carousel-item>
-</ons-carousel>
-            </section>
-        </ons-page>
-    </ons-template>
-    <!--Main end-->
 
+            <ons-list id="wall">              
+     
+            <ons-list>
+
+
+</ons-page>
+    </ons-template>
+
+
+
+    <!--Main end-->
     <!--Profile page-->
     <ons-template id="profile.html">
         <ons-page id="profile">
@@ -159,13 +153,12 @@
                     </div>
                 </ons-list-item>
 
-                <ons-button modifier="large">Follow</ons-button>
+                <ons-button modifier="large" id="followBtn">Follow</ons-button>
 
             </section>
         </ons-page>
     </ons-template>
     <!--Profile page end-->
-
     <!--Account page-->
     <ons-template id="myAcc.html">
         <ons-page id="myAcc">
@@ -194,7 +187,6 @@
         </ons-page>
     </ons-template>
     <!--Account page end-->
-
     <!--downloading info  temp-->
     <ons-template id="downloading.html">
         <ons-dialog id="downloadingid">
@@ -210,12 +202,11 @@
     <ons-dialog id="uploadingDialog">
         <div style="text-align: center; padding: 10px;">
             <p id="whileUploading">
-                  <ons-progress-circular value="0" id="progessBar"></ons-progress-circular>
+                <ons-progress-circular value="0" id="progessBar"></ons-progress-circular>
             <p>
         </div>
     </ons-dialog>
     <!--Uploading dialog End-->
-
     <!-- Cordova reference -->
     <script src="cordova.js"></script>
     <script src="scripts/index.js"></script>

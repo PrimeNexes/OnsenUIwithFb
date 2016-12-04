@@ -2,52 +2,34 @@
 document.addEventListener('init', function (event) {
 
     firebase.database().goOnline();
-    //wallpaperKey
-    var wKey;
 
-    function setwKey(keyData)
-    {
-        wKey = keyData;
-    }
-    var paperCountRef = firebase.database().ref().child('wKey');
-    paperCountRef.on('value', snap => setwKey(snap.val()));
-    //wallpaperURL funs
-    var wallURL;
-    function setWallpaperURL(urlData) {
-        wallURL = urlData;
-        console.log(wallURL);
-    }
 
-    function getWallpaper(wid) {
-        firebase.storage().ref('wid/' + wid + '.jpeg').getDownloadURL().then(function (url) { setWallpaperURL(url); console.log }).catch(function (error) { console.log("error in wid " + wid) });
-    }
 
-    //current wallpaper count
-    
+
 
     var page = event.target;
     if (page.id === 'sp') {
         const promise = firebase.auth().onAuthStateChanged(function (user) {
             if (user) {
-               
-                    document.querySelector('#mainNavigator').pushPage('home.html');
-                    console.log(wKey);
-      
-                }
-                else {
-                    console.log(wKey);
-                    document.querySelector('#mainNavigator').pushPage('login.html');
-    
-                }
-            
-            });
-        
+
+                document.querySelector('#mainNavigator').pushPage('home.html');
+
+
+            }
+            else {
+
+                document.querySelector('#mainNavigator').pushPage('login.html');
+
+            }
+
+        });
+
 
     }
 
     if (page.id === 'login') {
         //If Already Logged in
-   
+
         //If Already Logged in End
         page.querySelector('#loginBtn').onclick = function () {
             //Login Auth
@@ -110,7 +92,7 @@ document.addEventListener('init', function (event) {
                     user.sendEmailVerification().then(function () {
                         //create userDB 
                         var userId = firebase.auth().currentUser.uid;
-                        firebase.database().ref('userDB/' + userId).set({ followedBy: { uid: true }, followedByInt: 0, following: { uid: true }, followedByInt: 0, uploads: { wid: true }, wallpaperLiked: { wid: true } });
+                        firebase.database().ref('userDB/' + userId).set({ followedBy: 0, followedByInt: 0, following: 0, followedByInt: 0, uploads: 0, wallpaperLiked: 0 });
                         ons.notification.alert('Account Created ! Please Verify your Email by typing the Verification code in your Profile');
 
                     }, function (error) {
@@ -134,20 +116,19 @@ document.addEventListener('init', function (event) {
             //Signup Auth End         
         };
     }
-    else if (page.id == 'home') {
-        //set current wallpaper counter
-        firebase.storage().ref('wid/0.jpeg').getDownloadURL().then(function (url) { document.getElementById('wp0').setAttribute('src', url); }).catch(function (error) { console.log("error in wid " + error); });
-        console.log("HOME");      
-        //Feed
-                var carousel = page.querySelector('#carousel');
-                carousel.addEventListener('postchange', function (event) {
-                //increment current wallpaper counter               
-                    firebase.storage().ref('wid/0.jpeg').getDownloadURL().then(function (url) { document.getElementById('wp' + event.activeIndex).setAttribute('src', url); }).catch(function (error) { console.log("error in wid " + error); });
-                if (event.activeIndex === 3) {
-                    carousel.refresh();
+    else if (page.id === 'home') {
 
-                }
-            });
+        //Feed 
+        var wall = document.getElementById('wall');
+        firebase.database().ref("wallpaperDB/").orderByChild('likes').on("child_added", function (data) {
+            firebase.storage().ref('wid/' + data.key + '.jpeg').getDownloadURL().then(function (url) {
+                
+
+                wall.appendChild(ons._util.createElement('<img style="max-width:100%;" src="' + url + '" />'));
+            }).catch(function (error) { console.log("error in wid " + error); });
+        });
+
+
 
         //Feed End
         //MyAccount
@@ -167,8 +148,7 @@ document.addEventListener('init', function (event) {
         };
 
         //Download
-        page.querySelector('#downloadBtn').onclick = function ()
-        {
+        page.querySelector('#downloadBtn').onclick = function () {
 
             var dialog = document.getElementById('downloadingid');
 
@@ -186,60 +166,57 @@ document.addEventListener('init', function (event) {
         };
 
         //Poster's Profile
-        page.querySelector('#profileBtn').onclick = function ()
-        {
+        page.querySelector('#profileBtn').onclick = function () {
             document.querySelector('#mainNavigator').pushPage('profile.html');
 
         };
 
-            //Uploading Wallpaper
-        page.querySelector('#fileToUpload').onchange = function ()
-        {
-           
-            document.getElementById('uploadingDialog').show();           
+        //Uploading Wallpaper
+        page.querySelector('#fileToUpload').onchange = function () {
+
+            document.getElementById('uploadingDialog').show();
             var fileTBU = document.getElementById('fileToUpload').files[0];
-            console.log(wKey);
+
             if (fileTBU) {
-                        var progressBar = document.getElementById('progessBar');
-                        console.log(wKey);
-                        var stroageRef = firebase.storage().ref('wid/' + wKey +'.jpeg');
-                        var task = stroageRef.put(fileTBU);
-                        task.on('state_changed', function (snapshot) {
-                            var per = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                            progessBar.value = per;
-                        }, function (error) {
-                            document.getElementById('uploadingDialog').hide();
-                            ons.notification.alert("An error has occurred!" + error);
-                        }, function () {
-                            document.getElementById('uploadingDialog').hide();
-                            //+1 wKey
-                            var upd = wKey+ 1;
-                            console.log(upd);
-                            //set the updated key
-                            firebase.database().ref().child('wKey').set(upd);
-                            //get current user
-                            var userId = firebase.auth().currentUser.uid;
-                            //set wallpaper on db
-                            firebase.database().ref('wallpaperDB/' + wKey).set({ likes: 0, uid: userId });
-                            //set wallpaper on userdb
-                            firebase.database().ref('userDB/' + userId + '/uploads/'+wKey).set(true);
-                            ons.notification.alert("Uploaded Successfully");
-                        });
-                   
-                 
-                }
-                else {
-                    ons.notification.alert("Image can't be small than Heigh 1920 and Width 1080");
+                var progressBar = document.getElementById('progessBar');
+                var newPostKey = firebase.database().ref().child('wallpaperDB').push().key;
+                var stroageRef = firebase.storage().ref('wid/' + newPostKey + '.jpeg');
+                var task = stroageRef.put(fileTBU);
+                task.on('state_changed', function (snapshot) {
+                    var per = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    progessBar.value = per;
+                }, function (error) {
                     document.getElementById('uploadingDialog').hide();
-                }
-                
-                //Uploading Wallpaper End
-          };
-           
+                    ons.notification.alert("An error has occurred!</br>" + error);
+                }, function () {
+                    document.getElementById('uploadingDialog').hide();
+
+                    //set the updated key
+
+                    //get current user
+                    var userId = firebase.auth().currentUser.uid;
+                    //set wallpaper on db    
+                    firebase.database().ref('wallpaperDB/' + newPostKey + '/').set({ uid: userId });
+                    firebase.database().ref('wallpaperDB/' + newPostKey + '/likes/' + userId).set(true);
+                    //set wallpaper on userdb
+                    firebase.database().ref('userDB/' + userId + '/uploads/' + newPostKey).set(true);
+                    ons.notification.alert("Uploaded Successfully");
+                });
+
+
+            }
+            else {
+                ons.notification.alert("Image can't be small than Heigh 1920 and Width 1080");
+                document.getElementById('uploadingDialog').hide();
+            }
+
+            //Uploading Wallpaper End
+        };
+
 
 
     }
-    else if (page.id == 'myAcc') {
+    else if (page.id === 'myAcc') {
         var user = firebase.auth().currentUser;
         var username = user.displayName;
         document.getElementById('my-username').innerText = username;
@@ -253,16 +230,17 @@ document.addEventListener('init', function (event) {
                 ons.notification.alert("Error ! Try again");
             });
         };
-            //Logout End
-        }
-    else if (page.id == 'profile') {
+        //Logout End
+    }
+    else if (page.id === 'profile') {
         page.querySelector('#followBtn').onclick = function () {
 
 
         };
-    
+
     }
-    
+
+
 
 });
 //Main End
