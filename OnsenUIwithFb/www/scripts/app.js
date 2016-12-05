@@ -1,5 +1,10 @@
 ﻿//Main
+function feed(urlData, keyData) {
+    var feedData,likeData;
+    feedData.push(urlData);
+    likeData.push(keyData);
 
+}
 
 
 document.addEventListener('init', function (event) {
@@ -32,9 +37,8 @@ document.addEventListener('init', function (event) {
         //If Already Logged in End
         page.querySelector('#loginBtn').onclick = function () {
             //Login Auth
-            var loginUser = document.getElementById("loginUser").value;
-            var loginPass = document.getElementById("loginPass").value;
-            console.log(loginPass + loginUser);
+            var loginUser = page.querySelector("#loginUser").value;
+            var loginPass = page.querySelector("#loginPass").value;           
             const lauth = firebase.auth();
             const promise = lauth.signInWithEmailAndPassword(loginUser, loginPass)
             .catch(function (error) {
@@ -54,11 +58,7 @@ document.addEventListener('init', function (event) {
 
             });
 
-            promise.then(function () {
-                var user = firebase.auth().currentUser;
-                if (user) { document.querySelector('#mainNavigator').pushPage('home.html'); }
-            });
-
+      
             //Login Auth End
         };
 
@@ -70,8 +70,8 @@ document.addEventListener('init', function (event) {
     else if (page.id === 'signup') {
         page.querySelector('#makeaccBtn').onclick = function () {
             //Signup Auth
-            var signinUser = document.getElementById('signinUser').value;
-            var signinPass = document.getElementById('signinPass').value;
+            var signinUser = page.querySelector('#signinUser').value;
+            var signinPass = page.querySelector('#signinPass').value;
             console.log(signinPass + signinUser);
             const sauth = firebase.auth();
             sauth.createUserWithEmailAndPassword(signinUser, signinPass)
@@ -118,26 +118,40 @@ document.addEventListener('init', function (event) {
     else if (page.id === 'home') {
 
         //Feed 
-        var wall = document.getElementById('wall');
+        var wall = page.querySelector('#wall');
         var postCount = 0;
+        var userId = firebase.auth().currentUser.uid;
         firebase.database().ref("wallpaperDB/").orderByChild('likes').on("child_added", function (data) {
-            firebase.storage().ref('wid/' + data.key + '.jpeg').getDownloadURL().then(function (url) {              
+            firebase.storage().ref('wid/' + data.key + '.jpeg').getDownloadURL().then(function (url) {
+
                
-                var userId = firebase.auth().currentUser.uid;
                 firebase.database().ref('/userDB/' + userId + '/uploads/' + data.key).once('value').then(function (snapshot) {
-                    wall.appendChild(ons._util.createElement('<img style="max-width:100%;" src="' + url + '" alt="Loading....."/>'));
-                    wall.appendChild(ons._util.createElement('<ons-button class="Liked" disabled="true"; modifier="large">Liked</ons-button>'));
+                    if (snapshot.val() == true) {
+                            //Not printing liked contents
+                    }
+                    else {
+                        wall.appendChild(ons._util.createElement('<ons-list-item tappable ripple><div class="left"><img class="list__item__thumbnail" src="http://placekitten.com/g/40/40" ></div> <div class="center"><span class="list__item__title">Cutest kitty</span><span class="list__item__subtitle">        </span></div> </ons-list-item>'));
+                        wall.appendChild(ons._util.createElement('<ons-list-item tappable ripple><img style="max-width:100%;" src="' + url + '" alt="Loading....."/>'));
+                        wall.appendChild(ons._util.createElement('<ons-button id="' + data.key + '" modifier="large"> Like &  Download</ons-button> </ons-list-item>'));
+
+                        // onLike Click
+                        page.querySelector('#' + data.key).onclick = function () {
+                            page.querySelector('#' + data.key).setAttribute("disabled", "true");
+
+                        };
+                    }
 
                 }).catch(function (error) {
-                    wall.appendChild(ons._util.createElement('<img style="max-width:100%;" src="' + url + '" alt="Loading....."/>'));
-                    wall.appendChild(ons._util.createElement('<ons-button class="nLiked" modifier="large">Like</ons-button>'));
+                    console.log("Fetch Validating Error:" + error);
                 });
+             
+      
 
-                 
-            }).catch(function (error) { console.log("Error :" + error); });
+
+            }).catch(function (error) { console.log("Stroage Fetching error :" + error); });
         });
 
-
+        
 
         //Feed End
         //MyAccount
@@ -148,18 +162,18 @@ document.addEventListener('init', function (event) {
 
         //Like
         page.querySelector('#likeBtn').onclick = function () {
-            if (document.getElementById("likeIcon").getAttribute("icon") == "md-star") {
-                document.getElementById("likeIcon").setAttribute("icon", "md-star-outline");
+            if (page.querySelector("#likeIcon").getAttribute("icon") == "md-star") {
+                page.querySelector("#likeIcon").setAttribute("icon", "md-star-outline");
             }
             else {
-                document.getElementById("likeIcon").setAttribute("icon", "md-star");
+                page.querySelector("#likeIcon").setAttribute("icon", "md-star");
             }
         };
 
         //Download
         page.querySelector('#downloadBtn').onclick = function () {
 
-            var dialog = document.getElementById('downloadingid');
+            var dialog = page.querySelector('#downloadingid');
 
             if (dialog) {
                 dialog.show();
@@ -183,11 +197,11 @@ document.addEventListener('init', function (event) {
         //Uploading Wallpaper
         page.querySelector('#fileToUpload').onchange = function () {
 
-            document.getElementById('uploadingDialog').show();
-            var fileTBU = document.getElementById('fileToUpload').files[0];
+           document.getElementById('uploadingDialog').show();
+            var fileTBU = page.querySelector('#fileToUpload').files[0];
 
             if (fileTBU) {
-                var progressBar = document.getElementById('progessBar');
+                var progressBar = page.querySelector('#progessBar');
                 var newPostKey = firebase.database().ref().child('wallpaperDB').push().key;
                 var stroageRef = firebase.storage().ref('wid/' + newPostKey + '.jpeg');
                 var task = stroageRef.put(fileTBU);
@@ -209,6 +223,7 @@ document.addEventListener('init', function (event) {
                     firebase.database().ref('wallpaperDB/' + newPostKey + '/likes/' + userId).set(true);
                     //set wallpaper on userdb
                     firebase.database().ref('userDB/' + userId + '/uploads/' + newPostKey).set(true);
+                    firebase.database().ref('userDB/' + userId + '/wallpaperLiked/' + newPostKey).set(true);
                     ons.notification.alert("Uploaded Successfully");
                 });
 
@@ -228,8 +243,7 @@ document.addEventListener('init', function (event) {
     else if (page.id === 'myAcc') {
         var user = firebase.auth().currentUser;
         var username = user.displayName;
-        document.getElementById('my-username').innerText = username;
-        console.log(user.displayName);
+        page.querySelector('#my-username').innerHTML = username;      
         page.querySelector('#logoutBtn').onclick = function () {
             //Logout
             firebase.auth().signOut().then(function () {
