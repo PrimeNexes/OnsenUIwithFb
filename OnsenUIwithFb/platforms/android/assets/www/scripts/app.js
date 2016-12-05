@@ -131,7 +131,7 @@ document.addEventListener('init', function (event) {
                     }
                     else {
                         wall.appendChild(ons._util.createElement('<ons-list-item tappable><div class="left"><img class="list__item__thumbnail" src="http://placekitten.com/g/40/40" ></div> <div class="center"><span class="list__item__title">Cutest kitty</span><span class="list__item__subtitle">        </span></div> </ons-list-item>'));
-                        wall.appendChild(ons._util.createElement('<ons-list-item tappable ripple><img style="width: 100%; width: 95vw;object-fit: cover;" src="' + url + '" alt="Loading....."/><ons-button id="' + data.key + '" modifier="large" style="width: 100%; width: 95vw;object-fit: cover;"> Like &  Download</ons-button> </ons-list-item>'));
+                        wall.appendChild(ons._util.createElement('<ons-list-item tappable ripple style="padding:0px 0px 0px 6px"><img style="max-width:100%;" src="' + url + '" alt="Loading....."/><ons-button id="' + data.key + '" modifier="large" > Like &  Download</ons-button> </ons-list-item>'));
                     
 
                         // onLike Click
