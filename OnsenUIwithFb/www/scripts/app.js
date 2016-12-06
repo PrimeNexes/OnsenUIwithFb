@@ -1,6 +1,6 @@
 ﻿//Main
 function feed(urlData, keyData) {
-    var feedData,likeData;
+    var feedData, likeData;
     feedData.push(urlData);
     likeData.push(keyData);
 
@@ -11,6 +11,7 @@ document.addEventListener('init', function (event) {
 
     firebase.database().goOnline();
 
+    
     var page = event.target;
     if (page.id === 'sp') {
         const promise = firebase.auth().onAuthStateChanged(function (user) {
@@ -38,7 +39,7 @@ document.addEventListener('init', function (event) {
         page.querySelector('#loginBtn').onclick = function () {
             //Login Auth
             var loginUser = page.querySelector("#loginUser").value;
-            var loginPass = page.querySelector("#loginPass").value;           
+            var loginPass = page.querySelector("#loginPass").value;
             const lauth = firebase.auth();
             const promise = lauth.signInWithEmailAndPassword(loginUser, loginPass)
             .catch(function (error) {
@@ -58,7 +59,7 @@ document.addEventListener('init', function (event) {
 
             });
 
-      
+
             //Login Auth End
         };
 
@@ -117,42 +118,56 @@ document.addEventListener('init', function (event) {
     }
     else if (page.id === 'home') {
 
-        //Feed 
+        //Feed Engine
         var wall = page.querySelector('#wall');
-        var postCount = 0;
-        var userId = firebase.auth().currentUser.uid;
+        var userId = firebase.auth().currentUser;
         firebase.database().ref("wallpaperDB/").orderByChild('likes').on("child_added", function (data) {
             firebase.storage().ref('wid/' + data.key + '.jpeg').getDownloadURL().then(function (url) {
-
-               
-                firebase.database().ref('/userDB/' + userId + '/uploads/' + data.key).once('value').then(function (snapshot) {
+                firebase.database().ref('/userDB/' + userId.uid + '/wallpaperLiked/' + data.key).once('value').then(function (snapshot) {
                     if (snapshot.val() == true) {
-                            //Not printing liked contents
+                        //Not printing liked contents
                     }
                     else {
-                        wall.appendChild(ons._util.createElement('<ons-list-item tappable><div class="left"><img class="list__item__thumbnail" src="http://placekitten.com/g/40/40" ></div> <div class="center"><span class="list__item__title">Cutest kitty</span><span class="list__item__subtitle">        </span></div> </ons-list-item>'));
-                        wall.appendChild(ons._util.createElement('<ons-list-item tappable ripple style="padding:0px 0px 0px 6px"><img style="max-width:100%;" src="' + url + '" alt="Loading....."/><ons-button id="' + data.key + '" modifier="large" > Like &  Download</ons-button> </ons-list-item>'));
-                    
+
+
+                        wall.appendChild(ons._util.createElement('<ons-list-item tappable><div class="left"><img class="list__item__thumbnail" src="http://placekitten.com/g/40/40" ></div> <div class="center"><span class="list__item__title"><b>' + userId.displayName + '</b></span><span class="list__item__subtitle">Followers:</span></div><div class="right"><ons-icon icon="md-thumb-up"><b> Likes : <b id="' + data.key + 'Likes">0</b></b></div> </ons-list-item>'));
+                        wall.appendChild(ons._util.createElement('<ons-list-item tappable ripple style="padding:0px 0px 0px 6px"><img style="max-width:100%;" src="' + url + '" alt="Loading....."/><ons-button modifier="large"><a style="text-decoration: none;color:inherit;" href="images/test.jpg" download="test"  id="' + data.key + '">Like &  Download </a></ons-button></ons-list-item>'));
+                        page.querySelector('#' + data.key + 'Likes').innerHTML = data.val().likes;                       
 
                         // onLike Click
                         page.querySelector('#' + data.key).onclick = function () {
+                            console.log(data.key);
+                            firebase.database().ref('/userDB/' + userId.uid + '/wallpaperLiked/' + data.key).set(true);
+                            firebase.database().ref('wallpaperDB/' + data.key).child('likes').set(data.val().likes + 1);
                             page.querySelector('#' + data.key).setAttribute("disabled", "true");
 
                         };
                     }
+    
 
                 }).catch(function (error) {
                     console.log("Fetch Validating Error:" + error);
                 });
-             
-      
+
+
 
 
             }).catch(function (error) { console.log("Stroage Fetching error :" + error); });
+
         });
+        //feed Engine
+        // update likes at 5 sec interval
+        function likesUpdate(){
+        firebase.database().ref("wallpaperDB/").orderByChild('likes').on("child_added", function (data) {
 
-        
+            if (page.querySelector('#' + data.key + 'Likes')) {
+                console.log("Updating Likes .....");
+                page.querySelector('#' + data.key + 'Likes').innerHTML = data.val().likes;
+            }
 
+        });
+        }
+        setInterval(likesUpdate, 5000);
         //Feed End
         //MyAccount
         page.querySelector('#myAccBtn').onclick = function () {
@@ -160,44 +175,34 @@ document.addEventListener('init', function (event) {
             document.querySelector('#mainNavigator').pushPage('myAcc.html');
         };
 
-        //Like
-        page.querySelector('#likeBtn').onclick = function () {
-            if (page.querySelector("#likeIcon").getAttribute("icon") == "md-star") {
-                page.querySelector("#likeIcon").setAttribute("icon", "md-star-outline");
-            }
-            else {
-                page.querySelector("#likeIcon").setAttribute("icon", "md-star");
-            }
-        };
-
         //Download
-        page.querySelector('#downloadBtn').onclick = function () {
+       // page.querySelector('#downloadBtn').onclick = function () {
 
-            var dialog = page.querySelector('#downloadingid');
+         //   var dialog = page.querySelector('#downloadingid');
 
-            if (dialog) {
-                dialog.show();
-                dialog.hide();
-            }
-            else {
-                ons.createDialog('downloading.html')
-                  .then(function (dialog) {
-                      dialog.show();
-                      dialog.hide();
-                  });
-            }
-        };
+         //   if (dialog) {
+         //       dialog.show();
+         //       dialog.hide();
+        //    }
+        //    else {
+       //         ons.createDialog('downloading.html')
+       //           .then(function (dialog) {
+       //               dialog.show();
+       //               dialog.hide();
+       //           });
+       //     }
+      //  };
 
         //Poster's Profile
-        page.querySelector('#profileBtn').onclick = function () {
-            document.querySelector('#mainNavigator').pushPage('profile.html');
+       // page.querySelector('#profileBtn').onclick = function () {
+       //     document.querySelector('#mainNavigator').pushPage('profile.html');
 
-        };
+      //  };
 
         //Uploading Wallpaper
         page.querySelector('#fileToUpload').onchange = function () {
 
-           document.getElementById('uploadingDialog').show();
+            document.getElementById('uploadingDialog').show();
             var fileTBU = page.querySelector('#fileToUpload').files[0];
 
             if (fileTBU) {
@@ -219,8 +224,8 @@ document.addEventListener('init', function (event) {
                     //get current user
                     var userId = firebase.auth().currentUser.uid;
                     //set wallpaper on db    
-                    firebase.database().ref('wallpaperDB/' + newPostKey + '/').set({ uid: userId });
-                    firebase.database().ref('wallpaperDB/' + newPostKey + '/likes/' + userId).set(true);
+                    firebase.database().ref('wallpaperDB/' + newPostKey + '/').set({ uid: userId, likes: 0});
+                   
                     //set wallpaper on userdb
                     firebase.database().ref('userDB/' + userId + '/uploads/' + newPostKey).set(true);
                     firebase.database().ref('userDB/' + userId + '/wallpaperLiked/' + newPostKey).set(true);
@@ -243,7 +248,18 @@ document.addEventListener('init', function (event) {
     else if (page.id === 'myAcc') {
         var user = firebase.auth().currentUser;
         var username = user.displayName;
-        page.querySelector('#my-username').innerHTML = username;      
+        page.querySelector('#my-username').innerHTML = username;
+
+        page.querySelector('#myUpdBtn').onclick = function () {
+            document.querySelector('#mainNavigator').pushPage('myUpd.html');
+
+        };
+
+        page.querySelector('#myLikesBtn').onclick = function () {
+            document.querySelector('#mainNavigator').pushPage('myLikes.html');
+
+        };
+
         page.querySelector('#logoutBtn').onclick = function () {
             //Logout
             firebase.auth().signOut().then(function () {
@@ -262,7 +278,39 @@ document.addEventListener('init', function (event) {
         };
 
     }
+    else if (page.id === 'myUpd')
+    {
+        var uwall = page.querySelector('#myUpdWall');
+            var userId = firebase.auth().currentUser;
+            firebase.database().ref("wallpaperDB/").orderByChild('likes').on("child_added", function (data) {
+            firebase.storage().ref('wid/' + data.key + '.jpeg').getDownloadURL().then(function (url) {
+                firebase.database().ref('/userDB/' + userId.uid + '/wallpaperLiked/' + data.key).once('value').then(function (snapshot) {
+                    if (snapshot.val() == true) {
+                        uwall.appendChild(ons._util.createElement('<ons-list-item tappable><div class="left"><img class="list__item__thumbnail" src="http://placekitten.com/g/40/40" ></div> <div class="center"><span class="list__item__title">' + userId.displayName + '</span><span class="list__item__subtitle">Followers:</span></div><div class="right"><ons-icon icon="md-thumb-up"><b> Likes : <b id="' + data.key + 'Likes">0</b></b></div> </ons-list-item>'));
+                        uwall.appendChild(ons._util.createElement('<ons-list-item tappable ripple style="padding:0px 0px 0px 6px"><img style="max-width:100%;" src="' + url + '" alt="Loading....."/> <ons-button modifier="large"><a style="text-decoration: none;color:inherit;" href="images/test.jpg" download="test"  id="' + data.key + '">Download</a></ons-button></ons-list-item>'));
+                        page.querySelector('#' + data.key + 'Likes').innerHTML = data.val().likes;
+                    }
+                    else {
 
+                        uwall.appendChild(ons._util.createElement('<ons-list-item tappable><div class="left"><img class="list__item__thumbnail" src="http://placekitten.com/g/40/40" ></div> <div class="center"><span class="list__item__title">'+userId.displayName+'</span><span class="list__item__subtitle">Followers:</span></div><div class="right"><ons-icon icon="md-thumb-up"><b> Likes : <b id="' + data.key + 'Likes">0</b></b></div> </ons-list-item>'));
+                        uwall.appendChild(ons._util.createElement('<ons-list-item tappable ripple style="padding:0px 0px 0px 6px"><img style="max-width:100%;" src="' + url + '" alt="Loading....."/> <ons-button modifier="large"><a style="text-decoration: none;color:inherit;" href="images/test.jpg" download="test"  id="' + data.key + '">Download</a></ons-button></ons-list-item>'));
+                        page.querySelector('#' + data.key + 'Likes').innerHTML = data.val().likes;
+
+                    }
+
+
+                }).catch(function (error) {
+                    console.log("Fetch Validating Error:" + error);
+                });
+
+
+
+
+            }).catch(function (error) { console.log("Stroage Fetching error :" + error); });
+
+        });
+
+    }
 
 
 });

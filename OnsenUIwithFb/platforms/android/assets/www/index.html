@@ -116,19 +116,25 @@
                 </div>
             </ons-toolbar>
 
-            <ons-list id="wall" > 
-                <!--<ons-list-item tappable ripple><div class="left"><img class="list__item__thumbnail" src="http://placekitten.com/g/40/40"></div> <div class="center"><span class="list__item__title">Cutest kitty</span><span class="list__item__subtitle">        </span></div> </ons-list-item>               
-                <ons-list-item tappable ripple style="padding:0px 0px 0px 6px">    
-              
+            <ons-list > 
+              <!--<ons-list-item tappable ripple>
+                    <div class="left"><img class="list__item__thumbnail" src="http://placekitten.com/g/40/40"></div> <div class="center"><span class="list__item__title"><b>Cutest kitty</b></span><span class="list__item__subtitle">Followers : </span></div>
+                    <div class="right"><ons-icon icon="md-thumb-up"><b> Likes : <b >250</b></b></div>
+                </ons-list-item>
+                    <ons-list-item tappable ripple style="padding:0px 0px 0px 6px">
+
                         <img style="max-width:100%; " src="images/test.jpg" alt="Loading....." />
-                        <ons-button id="' + data.key + '" modifier="large"> Like &  Download</ons-button>
-                   
-               </ons-list-item> -->
-                    
-            <ons-list>
+     
+                           <ons-button modifier="large"><a style="text-decoration: none;color:inherit;" href="images/test.jpg" download="test"  id="' + data.key + '">Like &  Download </a></ons-button>
+
+  
+                    </ons-list-item>
+                  -->
+                    <ons-list>
 
 
-</ons-page>
+
+    </ons-page>
     </ons-template>
 
 
@@ -162,7 +168,7 @@
         </ons-page>
     </ons-template>
     <!--Profile page end-->
-    <!--Account page-->
+    <!-- My Account page-->
     <ons-template id="myAcc.html">
         <ons-page id="myAcc">
             <ons-toolbar>
@@ -182,14 +188,34 @@
                             <span class="list__item__title" id="my-username">How the hell there is no Username HERE !</span><span class="list__item__subtitle">Followers : </span>
                         </div>
                     </ons-list-item>
+                     <ons-list-item>
+
                 </ons-list>
-
-                <ons-button modifier="large" id="logoutBtn" onclick="logout()">Log-out</ons-button>
-
-            </section>
+                <p style="margin-top: 30px;">
+                    <ons-button modifier="large" id="myUpdBtn"> My Likes and Uploads</ons-button>
+                </p>
+                <p style="margin-top: 30px;">
+                    <ons-button modifier="large" id="logoutBtn">Log-out</ons-button>
+                    </p>
+                </section>
         </ons-page>
     </ons-template>
-    <!--Account page end-->
+    <!--My Account page end-->
+    <!-- My Upload page-->
+    <ons-template id="myUpd.html">
+        <ons-page id="myUpd">
+            <ons-toolbar>
+                <div class="left"><ons-back-button>Back</ons-back-button></div>
+                <div class="center">
+                    My Likes and Uploads
+                </div>
+            </ons-toolbar>
+            <ons-list id="myUpdWall">
+
+                <ons-list>
+        </ons-page>
+    </ons-template>
+    <!--My Upload page end-->
     <!--downloading info  temp-->
     <ons-template id="downloading.html">
         <ons-dialog id="downloadingid">
