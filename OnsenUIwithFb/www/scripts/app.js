@@ -131,14 +131,16 @@ document.addEventListener('init', function (event) {
 
 
                         wall.appendChild(ons._util.createElement('<ons-list-item tappable><div class="left"><img class="list__item__thumbnail" src="http://placekitten.com/g/40/40" ></div> <div class="center"><span class="list__item__title"><b>' + userId.displayName + '</b></span><span class="list__item__subtitle">Followers:</span></div><div class="right"><ons-icon icon="md-thumb-up"><b> Likes : <b id="' + data.key + 'Likes">0</b></b></div> </ons-list-item>'));
-                        wall.appendChild(ons._util.createElement('<ons-list-item tappable ripple style="padding:0px 0px 0px 6px"><img style="max-width:100%;" src="' + url + '" alt="Loading....."/><ons-button modifier="large"><a style="text-decoration: none;color:inherit;" href="images/test.jpg" download="test"  id="' + data.key + '">Like &  Download </a></ons-button></ons-list-item>'));
+                        wall.appendChild(ons._util.createElement('<ons-list-item tappable ripple style="padding:0px 0px 0px 6px"><img style="max-width:100%;" src="' + url + '" alt="Loading....."/><ons-button modifier="large"><a style="text-decoration: none;color:inherit;" href="'+url+'" download="'+data.key+'.jpeg"  id="' + data.key + 'OnLike">Like &  Download </a></ons-button></ons-list-item>'));
                         page.querySelector('#' + data.key + 'Likes').innerHTML = data.val().likes;                       
 
                         // onLike Click
-                        page.querySelector('#' + data.key).onclick = function () {
+                        page.querySelector('#' + data.key+'OnLike').onclick = function () {
                             console.log(data.key);
                             firebase.database().ref('/userDB/' + userId.uid + '/wallpaperLiked/' + data.key).set(true);
                             firebase.database().ref('wallpaperDB/' + data.key).child('likes').set(data.val().likes + 1);
+                    
+                 
                             page.querySelector('#' + data.key).setAttribute("disabled", "true");
 
                         };
@@ -255,10 +257,6 @@ document.addEventListener('init', function (event) {
 
         };
 
-        page.querySelector('#myLikesBtn').onclick = function () {
-            document.querySelector('#mainNavigator').pushPage('myLikes.html');
-
-        };
 
         page.querySelector('#logoutBtn').onclick = function () {
             //Logout
@@ -287,16 +285,19 @@ document.addEventListener('init', function (event) {
                 firebase.database().ref('/userDB/' + userId.uid + '/wallpaperLiked/' + data.key).once('value').then(function (snapshot) {
                     if (snapshot.val() == true) {
                         uwall.appendChild(ons._util.createElement('<ons-list-item tappable><div class="left"><img class="list__item__thumbnail" src="http://placekitten.com/g/40/40" ></div> <div class="center"><span class="list__item__title">' + userId.displayName + '</span><span class="list__item__subtitle">Followers:</span></div><div class="right"><ons-icon icon="md-thumb-up"><b> Likes : <b id="' + data.key + 'Likes">0</b></b></div> </ons-list-item>'));
-                        uwall.appendChild(ons._util.createElement('<ons-list-item tappable ripple style="padding:0px 0px 0px 6px"><img style="max-width:100%;" src="' + url + '" alt="Loading....."/> <ons-button modifier="large"><a style="text-decoration: none;color:inherit;" href="images/test.jpg" download="test"  id="' + data.key + '">Download</a></ons-button></ons-list-item>'));
+                        uwall.appendChild(ons._util.createElement('<ons-list-item tappable ripple style="padding:0px 0px 0px 6px"><img style="max-width:100%;" src="' + url + '" alt="Loading....."/> <ons-button modifier="large"><a style="text-decoration: none;color:inherit;" href="'+url+'" download="'+data.key+'.jpeg"  id="' + data.key + '" >Download</a></ons-button></ons-list-item>'));
                         page.querySelector('#' + data.key + 'Likes').innerHTML = data.val().likes;
                     }
                     else {
 
                         uwall.appendChild(ons._util.createElement('<ons-list-item tappable><div class="left"><img class="list__item__thumbnail" src="http://placekitten.com/g/40/40" ></div> <div class="center"><span class="list__item__title">'+userId.displayName+'</span><span class="list__item__subtitle">Followers:</span></div><div class="right"><ons-icon icon="md-thumb-up"><b> Likes : <b id="' + data.key + 'Likes">0</b></b></div> </ons-list-item>'));
-                        uwall.appendChild(ons._util.createElement('<ons-list-item tappable ripple style="padding:0px 0px 0px 6px"><img style="max-width:100%;" src="' + url + '" alt="Loading....."/> <ons-button modifier="large"><a style="text-decoration: none;color:inherit;" href="images/test.jpg" download="test"  id="' + data.key + '">Download</a></ons-button></ons-list-item>'));
+                        uwall.appendChild(ons._util.createElement('<ons-list-item tappable ripple style="padding:0px 0px 0px 6px"><img style="max-width:100%;" src="' + url + '" alt="Loading....."/> <ons-button modifier="large"><a style="text-decoration: none;color:inherit;" href="' + url + '" download="' + data.key + '.jpeg"  id="' + data.key + '">Download</a></ons-button></ons-list-item>'));
                         page.querySelector('#' + data.key + 'Likes').innerHTML = data.val().likes;
 
                     }
+
+
+
 
 
                 }).catch(function (error) {

@@ -18,6 +18,9 @@
         },
         "cordova-plugin-file-transfer": {
             "PACKAGE_NAME": "io.onsen.sampleapp"
+        },
+        "cordova-plugin-network-information": {
+            "PACKAGE_NAME": "io.onsen.sampleapp"
         }
     },
     "dependent_plugins": {
