@@ -391,10 +391,7 @@ function uwallEngine()
                             page.querySelector('#' + data.key + 'Likes').innerHTML = data.val().likes;
                         }
                         else {
-
-                            uwall.appendChild(ons._util.createElement('<ons-list-item tappable><div class="left"><img class="list__item__thumbnail" src="http://placekitten.com/g/40/40" ></div> <div class="center"><span class="list__item__title">' + userId.displayName + '</span><span class="list__item__subtitle">Followers:</span></div><div class="right"><ons-icon icon="md-thumb-up"><b> Likes : <b id="' + data.key + 'Likes">0</b></b></div> </ons-list-item>'));
-                            uwall.appendChild(ons._util.createElement('<ons-list-item tappable ripple style="padding:0px 0px 0px 6px"><img style="max-width:100%;" src="' + url + '" alt="Loading....."/> <ons-button modifier="large"><a style="text-decoration: none;color:inherit;" href="' + url + '" download="' + data.key + '"  id="' + data.key + 'OnDwnUser">Download</a></ons-button></ons-list-item>'));
-                            page.querySelector('#' + data.key + 'Likes').innerHTML = data.val().likes;
+                            //Ignore Likes
 
                         }
                         page.querySelector('#' + data.key + 'OnDwnUser').onclick = function () {
