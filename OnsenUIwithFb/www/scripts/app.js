@@ -9,9 +9,12 @@ document.addEventListener('init', function (event) {
     if (page.id === 'sp') {
         const promise = firebase.auth().onAuthStateChanged(function (user) {
             if (user) {
-
+                if (user.emailVerified) {
+                    //DO NOTHING 
+                }
+                else { ons.notification.alert('Verify your Account to get full access.The verification email is sent to your email address'); }
                 document.querySelector('#mainNavigator').pushPage('home.html');
-
+              
 
             }
             else {
@@ -87,7 +90,7 @@ document.addEventListener('init', function (event) {
                         //create userDB 
                         var userId = firebase.auth().currentUser.uid;
                         firebase.database().ref('userDB/' + userId).set({ followedBy: 0, followedByInt: 0, following: 0, followedByInt: 0, uploads: 0, wallpaperLiked: 0 });
-                        ons.notification.alert('Account Created ! Please Verify your Email by typing the Verification code in your Profile');
+                        ons.notification.alert('Account created !');
 
                     }, function (error) {
                         ons.notification.alert(error);
@@ -112,29 +115,52 @@ document.addEventListener('init', function (event) {
     }
     else if (page.id === 'home') {
         myNavigator.onDeviceBackButton.disable();
-     
+
+
         var mainwall = page.querySelector('#mainwall');
         //Feed Engine
         function mainwallEngine() {
            
             var userId = firebase.auth().currentUser;
+            //Check Email verification
+            var uploadBtn = page.querySelector('#fileToUpload');
+            if (userId.emailVerified) {
+                console.log('Email is verified');             
+                uploadBtn.removeAttribute('disabled');
+            }
+            else {               
+                uploadBtn.setAttribute('disabled', '');
+                console.log('Email is not verified');
+
+            }
+
+
+
             firebase.database().ref("wallpaperDB/").orderByChild('likes').on("child_added", function (data) {
                 firebase.storage().ref('wid/' + data.key + '.jpeg').getDownloadURL().then(function (url) {
                     firebase.database().ref('/userDB/' + userId.uid + '/wallpaperLiked/' + data.key).once('value').then(function (snapshot) {
-                        if (snapshot.val() == true) {
+                        console.log("id of the poster before filler"+ data.val().uname);
+                        if (snapshot.val() === true) {
                             //Not printing liked contents
                         }
                         else {
-                            mainwall.appendChild(ons._util.createElement('<ons-list-item tappable><div class="left"><img class="list__item__thumbnail" src="http://placekitten.com/g/40/40" ></div> <div class="center"><span class="list__item__title"><b>' + userId.displayName + '</b></span><span class="list__item__subtitle">Followers:</span></div><div class="right"><ons-icon icon="md-thumb-up"><b> Likes : <b id="' + data.key + 'Likes">0</b></b></div> </ons-list-item>'));
-                            mainwall.appendChild(ons._util.createElement('<ons-list-item tappable ripple style="padding:0px 0px 0px 6px"><img style="max-width:100%;" src="' + url + '" alt="Loading....."/><ons-button modifier="large"><a style="text-decoration: none;color:inherit;" href="' + url + '" download="' + data.key + '"  id="' + data.key + 'OnLike">Like &  Download </a></ons-button></ons-list-item>'));
+                            mainwall.appendChild(ons._util.createElement('<ons-list-item tappable><div class="left"><img class="list__item__thumbnail" src="http://placekitten.com/g/40/40" ></div> <div class="center"><span class="list__item__title"><b>' + data.val().uname + '</b></span><span class="list__item__subtitle">Followers:</span></div><div class="right"><ons-icon icon="md-thumb-up"><b> Likes : <b id="' + data.key + 'Likes">0</b></b></div> </ons-list-item>'));
+                            mainwall.appendChild(ons._util.createElement('<ons-list-item tappable ripple style="padding:0px 0px 0px 6px"><img style="max-width:100%;" src="' + url + '" alt="Loading....."/><ons-button modifier="large" id="' + data.key + 'OnLike">Like &<a style="text-decoration: none;color:inherit;" href="' + url + '" download="' + data.key + '" >  Download </a></ons-button></ons-list-item>'));
                             page.querySelector('#' + data.key + 'Likes').innerHTML = data.val().likes;
-
+                            if (userId.emailVerified) {
+                                console.log('Email is verified');
+                            }
+                            else {
+                                page.querySelector('#' + data.key + 'OnLike').setAttribute("disabled", "true");
+                                console.log('Email is not verified');
+                                
+                            }
                             // onLike Click
                             page.querySelector('#' + data.key + 'OnLike').onclick = function () {
-
+                              
                                 firebase.database().ref('/userDB/' + userId.uid + '/wallpaperLiked/' + data.key).set(true);
                                 firebase.database().ref('wallpaperDB/' + data.key).child('likes').set(data.val().likes + 1);
-
+                                console.log('Liked');
                                 var dialog = page.querySelector('#downloadingid');
                                 if (dialog) {
                                     dialog.show();
@@ -148,6 +174,7 @@ document.addEventListener('init', function (event) {
                                         dialog.hide();
                                     });
                                 }
+                                page.querySelector('#' + data.key + 'OnLike').setAttribute("disabled", "true");
                                 var fileTransfer = new FileTransfer();
 
                                 var fileURL = "///storage/emulated/0/MyWallpapers/wall" + data.key + ".jpeg";
@@ -172,7 +199,7 @@ document.addEventListener('init', function (event) {
                                    }
                                 );
 
-                                page.querySelector('#' + data.key).setAttribute("disabled", "true");
+                               
                             };
                         }
 
@@ -266,12 +293,12 @@ document.addEventListener('init', function (event) {
                             ons.notification.alert("An error has occurred!</br>" + error);
                         }, function () {                            
                             //get current user
-                            var userId = firebase.auth().currentUser.uid;
+                            var userId = firebase.auth().currentUser;
                             //set wallpaper on db    
-                            firebase.database().ref('wallpaperDB/' + newPostKey + '/').set({ uid: userId, likes: 1 });
+                            firebase.database().ref('wallpaperDB/' + newPostKey + '/').set({ uname: userId.displayName,uid:userId.uid, likes: 1 });
                             //set wallpaper on userdb
-                            firebase.database().ref('userDB/' + userId + '/uploads/' + newPostKey).set(true);
-                            firebase.database().ref('userDB/' + userId + '/wallpaperLiked/' + newPostKey).set(true);
+                            firebase.database().ref('userDB/' + userId.uid + '/uploads/' + newPostKey).set(true);
+                            firebase.database().ref('userDB/' + userId.uid + '/wallpaperLiked/' + newPostKey).set(true);
 
                             document.getElementById('uploadingDialog').hide();
                             ons.notification.alert("Uploaded Successfully");
@@ -340,6 +367,7 @@ function uwallEngine()
                 firebase.storage().ref('wid/' + data.key + '.jpeg').getDownloadURL().then(function (url) {
                     firebase.database().ref('/userDB/' + userId.uid + '/wallpaperLiked/' + data.key).once('value').then(function (snapshot) {
                         if (snapshot.val() == true) {
+                            
                             uwall.appendChild(ons._util.createElement('<ons-list-item tappable><div class="left"><img class="list__item__thumbnail" src="http://placekitten.com/g/40/40" ></div> <div class="center"><span class="list__item__title">' + userId.displayName + '</span><span class="list__item__subtitle">Followers:</span></div><div class="right"><ons-icon icon="md-thumb-up"><b> Likes : <b id="' + data.key + 'Likes">0</b></b></div> </ons-list-item>'));
                             uwall.appendChild(ons._util.createElement('<ons-list-item tappable ripple style="padding:0px 0px 0px 6px"><img style="max-width:100%;" src="' + url + '" alt="Loading....."/> <ons-button modifier="large"><a style="text-decoration: none;color:inherit;" href="' + url + '" download="' + data.key + '"  id="' + data.key + 'OnDwnUser" >Download</a></ons-button></ons-list-item>'));
                             page.querySelector('#' + data.key + 'Likes').innerHTML = data.val().likes;
