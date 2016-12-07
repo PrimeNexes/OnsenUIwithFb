@@ -116,21 +116,39 @@ document.addEventListener('init', function (event) {
     else if (page.id === 'home') {
         myNavigator.onDeviceBackButton.disable();
 
+  
+        //Check Email verification
 
         var mainwall = page.querySelector('#mainwall');
         //Feed Engine
         function mainwallEngine() {
            
             var userId = firebase.auth().currentUser;
+
             //Check Email verification
+            var uploadBtn = document.getElementById('fileToUpload');
+            if (userId.emailVerified) {
+                uploadBtn.setAttribute('disabled', '');
+                uploadBtn.removeAttribute('disabled');
+                console.log('Email is verified');
+
+            }
+            else {
+                uploadBtn.setAttribute('disabled', '');
+                console.log('Email is not verified at upload');
+
+            }
+
+
             var uploadBtn = page.querySelector('#fileToUpload');
             if (userId.emailVerified) {
-                console.log('Email is verified');             
                 uploadBtn.removeAttribute('disabled');
+                console.log('Email is verified');             
+              
             }
             else {               
                 uploadBtn.setAttribute('disabled', '');
-                console.log('Email is not verified');
+                console.log('Email is not verified at upload');
 
             }
 
