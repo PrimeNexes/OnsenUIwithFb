@@ -62,6 +62,9 @@ document.addEventListener('init', function (event) {
         page.querySelector('#signupBtn').onclick = function () {
             document.querySelector('#mainNavigator').pushPage('signup.html');
         };
+        page.querySelector('#fpassBtn').onclick = function () {
+            document.querySelector('#mainNavigator').pushPage('fpass.html');
+        };
 
     }
     else if (page.id === 'signup') {
@@ -113,16 +116,28 @@ document.addEventListener('init', function (event) {
             //Signup Auth End         
         };
     }
+    else if (page.id === 'fpass') {
+        page.querySelector('#sendfpassBtn').onclick = function () {
+            var fpassEmail = page.querySelector('#fpassEmail').value;
+            var auth = firebase.auth();
+            auth.sendPasswordResetEmail(fpassEmail).then(function () {
+                ons.notification.alert("Email sent.Reset your password via the link provided");
+            }, function (error) {
+                ons.notification.alert("No such email found.");
+            });
+        }
+
+    }
     else if (page.id === 'home') {
         myNavigator.onDeviceBackButton.disable();
 
-  
+
         //Check Email verification
 
         var mainwall = page.querySelector('#mainwall');
         //Feed Engine
         function mainwallEngine() {
-           
+
             var userId = firebase.auth().currentUser;
 
             //Check Email verification
@@ -143,10 +158,10 @@ document.addEventListener('init', function (event) {
             var uploadBtn = page.querySelector('#fileToUpload');
             if (userId.emailVerified) {
                 uploadBtn.removeAttribute('disabled');
-                console.log('Email is verified');             
-              
+                console.log('Email is verified');
+
             }
-            else {               
+            else {
                 uploadBtn.setAttribute('disabled', '');
                 console.log('Email is not verified at upload');
 
@@ -157,7 +172,7 @@ document.addEventListener('init', function (event) {
             firebase.database().ref("wallpaperDB/").orderByChild('likes').on("child_added", function (data) {
                 firebase.storage().ref('wid/' + data.key + '.jpeg').getDownloadURL().then(function (url) {
                     firebase.database().ref('/userDB/' + userId.uid + '/wallpaperLiked/' + data.key).once('value').then(function (snapshot) {
-                        console.log("id of the poster before filler"+ data.val().uname);
+                        console.log("id of the poster before filler" + data.val().uname);
                         if (snapshot.val() === true) {
                             //Not printing liked contents
                         }
@@ -171,11 +186,11 @@ document.addEventListener('init', function (event) {
                             else {
                                 page.querySelector('#' + data.key + 'OnLike').setAttribute("disabled", "true");
                                 console.log('Email is not verified');
-                                
+
                             }
                             // onLike Click
                             page.querySelector('#' + data.key + 'OnLike').onclick = function () {
-                              
+
                                 firebase.database().ref('/userDB/' + userId.uid + '/wallpaperLiked/' + data.key).set(true);
                                 firebase.database().ref('wallpaperDB/' + data.key).child('likes').set(data.val().likes + 1);
                                 console.log('Liked');
@@ -217,7 +232,7 @@ document.addEventListener('init', function (event) {
                                    }
                                 );
 
-                               
+
                             };
                         }
 
@@ -231,7 +246,7 @@ document.addEventListener('init', function (event) {
 
                 }).catch(function (error) { console.log("Stroage Fetching error :" + error); });
 
-            });         
+            });
             // update likes at 5 sec interval
             function likesUpdate() {
                 firebase.database().ref("wallpaperDB/").orderByChild('likes').on("child_added", function (data) {
@@ -277,23 +292,23 @@ document.addEventListener('init', function (event) {
 
         //MyAccount
         page.querySelector('#myAccBtn').onclick = function () {
-            
+
             document.querySelector('#mainNavigator').pushPage('myAcc.html');
         };
 
 
         //Poster's Profile
-       // page.querySelector('#profileBtn').onclick = function () {
-       //     document.querySelector('#mainNavigator').pushPage('profile.html');
+        // page.querySelector('#profileBtn').onclick = function () {
+        //     document.querySelector('#mainNavigator').pushPage('profile.html');
 
-      //  };
+        //  };
 
         //Uploading Wallpaper
         page.querySelector('#fileToUpload').onchange = function () {
 
             document.getElementById('uploadingDialog').show();
 
-            var fileTBU = page.querySelector('#fileToUpload').files[0];              
+            var fileTBU = page.querySelector('#fileToUpload').files[0];
             if (fileTBU) {
                 var img = new Image();
                 img.src = window.URL.createObjectURL(fileTBU);
@@ -309,11 +324,11 @@ document.addEventListener('init', function (event) {
                         }, function (error) {
                             document.getElementById('uploadingDialog').hide();
                             ons.notification.alert("An error has occurred!</br>" + error);
-                        }, function () {                            
+                        }, function () {
                             //get current user
                             var userId = firebase.auth().currentUser;
                             //set wallpaper on db    
-                            firebase.database().ref('wallpaperDB/' + newPostKey + '/').set({ uname: userId.displayName,uid:userId.uid, likes: 1 });
+                            firebase.database().ref('wallpaperDB/' + newPostKey + '/').set({ uname: userId.displayName, uid: userId.uid, likes: 1 });
                             //set wallpaper on userdb
                             firebase.database().ref('userDB/' + userId.uid + '/uploads/' + newPostKey).set(true);
                             firebase.database().ref('userDB/' + userId.uid + '/wallpaperLiked/' + newPostKey).set(true);
@@ -370,22 +385,20 @@ document.addEventListener('init', function (event) {
         };
 
     }
-    else if (page.id === 'myUpd')
-    {
+    else if (page.id === 'myUpd') {
 
         myNavigator.onDeviceBackButton.enable();
 
         var uwall = page.querySelector('#myUpdWall');
         // Feed Engine
-function uwallEngine()
-{
-           
+        function uwallEngine() {
+
             var userId = firebase.auth().currentUser;
             firebase.database().ref("wallpaperDB/").orderByChild('likes').on("child_added", function (data) {
                 firebase.storage().ref('wid/' + data.key + '.jpeg').getDownloadURL().then(function (url) {
                     firebase.database().ref('/userDB/' + userId.uid + '/wallpaperLiked/' + data.key).once('value').then(function (snapshot) {
                         if (snapshot.val() == true) {
-                            
+
                             uwall.appendChild(ons._util.createElement('<ons-list-item tappable><div class="left"><img class="list__item__thumbnail" src="http://placekitten.com/g/40/40" ></div> <div class="center"><span class="list__item__title">' + userId.displayName + '</span><span class="list__item__subtitle">Followers:</span></div><div class="right"><ons-icon icon="md-thumb-up"><b> Likes : <b id="' + data.key + 'Likes">0</b></b></div> </ons-list-item>'));
                             uwall.appendChild(ons._util.createElement('<ons-list-item tappable ripple style="padding:0px 0px 0px 6px"><img style="max-width:100%;" src="' + url + '" alt="Loading....."/> <ons-button modifier="large"><a style="text-decoration: none;color:inherit;" href="' + url + '" download="' + data.key + '"  id="' + data.key + 'OnDwnUser" >Download</a></ons-button></ons-list-item>'));
                             page.querySelector('#' + data.key + 'Likes').innerHTML = data.val().likes;
@@ -448,35 +461,35 @@ function uwallEngine()
                 }).catch(function (error) { console.log("Stroage Fetching error :" + error); });
 
             });
-}
-
-
-    //Init upload wallpaper
-    uwallEngine();
-        //Pull to refresh upload wallpaper
-    var pullhookuwall = page.querySelector('#pull-hook-uwall');
-    pullhookuwall.addEventListener('changestate', function (event) {
-        var message = '';
-
-        switch (event.state) {
-            case 'initial':
-                message = 'Pull to refresh';
-                break;
-            case 'preaction':
-                message = 'Release';
-                break;
-            case 'action':
-                message = 'Loading...';
-                uwall.innerHTML = "";
-                uwallEngine();
-                break;
         }
 
-        pullhookuwall.innerHTML = message;
-    });
-    pullhookuwall.onAction = function (done) {
-        setTimeout(done, 1000);
-    };
+
+        //Init upload wallpaper
+        uwallEngine();
+        //Pull to refresh upload wallpaper
+        var pullhookuwall = page.querySelector('#pull-hook-uwall');
+        pullhookuwall.addEventListener('changestate', function (event) {
+            var message = '';
+
+            switch (event.state) {
+                case 'initial':
+                    message = 'Pull to refresh';
+                    break;
+                case 'preaction':
+                    message = 'Release';
+                    break;
+                case 'action':
+                    message = 'Loading...';
+                    uwall.innerHTML = "";
+                    uwallEngine();
+                    break;
+            }
+
+            pullhookuwall.innerHTML = message;
+        });
+        pullhookuwall.onAction = function (done) {
+            setTimeout(done, 1000);
+        };
         //Pull to refresh upload wallpaper End
 
     }

@@ -69,7 +69,9 @@
                     <p style="margin-top: 30px;">
                         <ons-button modifier="large" id="signupBtn">Sign up</ons-button>
                     </p>
-                
+                    <p style="margin-top: 30px;">
+                        <ons-button modifier="large" id="fpassBtn">Forgot Password</ons-button>
+                    </p>
                 </div>
 
             </section>
@@ -91,6 +93,24 @@
                     </p>
                     <p style="margin-top: 30px;">
                         <ons-button modifier="large" id="makeaccBtn">Create Account</ons-button>
+                    </p>
+                </div>
+            </section>
+        </ons-page>
+    </ons-template>
+    <ons-template id="fpass.html">
+        <ons-page id="fpass">
+            <ons-toolbar>
+                <div class="left"><ons-back-button>Back</ons-back-button></div>
+                <div class="center">Forgot Password</div>
+            </ons-toolbar>
+            <section style="padding: 8px">
+                <div style="text-align: center; margin-top: 30px;">
+                    <p>
+                        <ons-input id="fpassEmail" modifier="underbar" placeholder="Email" float type="email"></ons-input>
+                    </p>
+                    <p style="margin-top: 30px;">
+                        <ons-button modifier="large" id="sendfpassBtn">Send reset Email</ons-button>
                     </p>
                 </div>
             </section>
