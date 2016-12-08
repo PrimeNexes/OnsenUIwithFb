@@ -243,7 +243,7 @@ document.addEventListener('init', function (event) {
 
                 });
             }
-            //var likeInterval = setInterval(likesUpdate, 5000);
+            var likeInterval = setInterval(likesUpdate, 5000);
         }
         //Feed Engine End
 
