@@ -26,7 +26,5 @@
     };
 })();
 function onOffline() {
-    ons.notification.alert('You are now offline!');
-    setTimeout(1000);
-    navigator.app.exitApp();
+    ons.notification.alert('Error connecting to network.');
 }
