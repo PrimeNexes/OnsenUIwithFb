@@ -155,17 +155,6 @@ document.addEventListener('init', function (event) {
             }
 
 
-            var uploadBtn = page.querySelector('#fileToUpload');
-            if (userId.emailVerified) {
-                uploadBtn.removeAttribute('disabled');
-                console.log('Email is verified');
-
-            }
-            else {
-                uploadBtn.setAttribute('disabled', '');
-                console.log('Email is not verified at upload');
-
-            }
 
 
 
@@ -191,7 +180,7 @@ document.addEventListener('init', function (event) {
                                 '<img style="max-width:100%;" src="' + url + '" alt="Loading....." />' +
                                 '<ons-button modifier="large" style="-webkit-border-radius: 0px;-webkit-box-shadow: 0 0px 0px 0 ;width:20%;" id="' + data.key + 'OnLike"><ons-icon icon="md-thumb-up" /></ons-button>' +
                                 '<ons-button modifier="large" style="-webkit-border-radius: 0px;-webkit-box-shadow: 0 0px 0px 0 ;width:65%;" id="' + data.key + 'OnDownload"><ons-icon icon="md-download" /></ons-button>' +
-                                '<ons-button modifier="large" style="-webkit-border-radius: 0px;-webkit-box-shadow: 0 0px 0px 0 ;width:15%; "><ons-icon icon="fa-flag" /></ons-button></ons-list-item>'));
+                                '<ons-button modifier="large" style="-webkit-border-radius: 0px;-webkit-box-shadow: 0 0px 0px 0 ;width:15%;" id="' + data.key + 'OnReport"><ons-icon icon="fa-flag" /></ons-button></ons-list-item>'));
 
 
 
@@ -206,6 +195,8 @@ document.addEventListener('init', function (event) {
                             }
                             else {
                                 page.querySelector('#' + data.key + 'OnLike').setAttribute("disabled", "true");
+                                page.querySelector('#' + data.key + 'OnDownload').setAttribute("disabled", "true");
+                                page.querySelector('#' + data.key + 'OnReport').setAttribute("disabled", "true");
                                 console.log('Email is not verified');
 
                             }
