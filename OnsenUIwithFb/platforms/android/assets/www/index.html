@@ -58,7 +58,7 @@
             <section style="padding: 8px">
                 <div style="text-align: center; margin-top: 30px;">
                     <p>
-                        <ons-input id="loginUser" modifier="underbar" placeholder="Email" float></ons-input>
+                        <ons-input id="loginUser" modifier="underbar" placeholder="Email" float type="email"></ons-input>
                     </p>
                     <p>
                         <ons-input id="loginPass" modifier="underbar" type="password" placeholder="Password" float></ons-input>
@@ -68,6 +68,9 @@
                     </p>
                     <p style="margin-top: 30px;">
                         <ons-button modifier="large" id="signupBtn">Sign up</ons-button>
+                    </p>
+                    <p style="margin-top: 30px;">
+                        <ons-button modifier="large" id="fpassBtn">Forgot Password</ons-button>
                     </p>
                 </div>
 
@@ -83,13 +86,31 @@
             <section style="padding: 8px">
                 <div style="text-align: center; margin-top: 30px;">
                     <p>
-                        <ons-input id="signinUser" modifier="underbar" placeholder="Username" float></ons-input>
+                        <ons-input id="signinUser" modifier="underbar" placeholder="Email" float type="email"></ons-input>
                     </p>
                     <p>
                         <ons-input id="signinPass" modifier="underbar" type="password" placeholder="Password" float></ons-input>
                     </p>
                     <p style="margin-top: 30px;">
                         <ons-button modifier="large" id="makeaccBtn">Create Account</ons-button>
+                    </p>
+                </div>
+            </section>
+        </ons-page>
+    </ons-template>
+    <ons-template id="fpass.html">
+        <ons-page id="fpass">
+            <ons-toolbar>
+                <div class="left"><ons-back-button>Back</ons-back-button></div>
+                <div class="center">Forgot Password</div>
+            </ons-toolbar>
+            <section style="padding: 8px">
+                <div style="text-align: center; margin-top: 30px;">
+                    <p>
+                        <ons-input id="fpassEmail" modifier="underbar" placeholder="Email" float type="email"></ons-input>
+                    </p>
+                    <p style="margin-top: 30px;">
+                        <ons-button modifier="large" id="sendfpassBtn">Send reset Email</ons-button>
                     </p>
                 </div>
             </section>
@@ -115,27 +136,25 @@
                     </ons-toolbar-button>
                 </div>
             </ons-toolbar>
+            <ons-pull-hook id="pull-hook-mainwall">
+                Pull to refresh
+            </ons-pull-hook>
+            <ons-list id="mainwall">
 
-            <ons-list id="wall"> 
-   
-              <ons-list-item tappable ripple>
-                    <div class="left"><img class="list__item__thumbnail" src="http://placekitten.com/g/40/40"></div> <div class="center"><span class="list__item__title"><b>Cutest kitty TEST</b></span><span class="list__item__subtitle">Followers : </span></div>
-                    <div class="right"><ons-icon icon="md-thumb-up"><b> Likes : <b >250</b></b></div>
-                </ons-list-item>
-                    <ons-list-item tappable ripple style="padding:0px 0px 0px 6px">
 
-                        <img style="max-width:100%; " src="images/test.jpg" alt="Loading....." />
-     
-                           <ons-button modifier="large"><a style="text-decoration: none;color:inherit;" href="images/test.jpg" download>TEST Like &  Download </a></ons-button>
-
-  
+                    <ons-list-item tappable ripple style="padding:0px 0px 0px 6px;" >
+                        <img style="max-width:100%;" src="images/test.jpg" alt="Loading....." />
+                        <ons-button modifier="large" style="-webkit-border-radius: 0px;-webkit-box-shadow: 0 0px 0px 0 ;width:20%;"><ons-icon icon="md-thumb-up" /></ons-button>
+                        <ons-button modifier="large" style="-webkit-border-radius: 0px;-webkit-box-shadow: 0 0px 0px 0 ;width:65%;"><ons-icon icon="md-download" /></ons-button>
+                        <ons-button modifier="large" style="-webkit-border-radius: 0px;-webkit-box-shadow: 0 0px 0px 0 ;width:15%; "><ons-icon icon="fa-flag" /></ons-button>
                     </ons-list-item>
-                 
+
+
                     <ons-list>
 
 
 
-    </ons-page>
+</ons-page>
     </ons-template>
 
 
@@ -193,7 +212,7 @@
 
                 </ons-list>
                 <p style="margin-top: 30px;">
-                    <ons-button modifier="large" id="myUpdBtn"> My Likes and Uploads</ons-button>
+                    <ons-button modifier="large" id="myUpdBtn"> My Uploads</ons-button>
                 </p>
                 <p style="margin-top: 30px;">
                     <ons-button modifier="large" id="logoutBtn">Log-out</ons-button>
@@ -211,6 +230,9 @@
                     My Likes and Uploads
                 </div>
             </ons-toolbar>
+            <ons-pull-hook id="pull-hook-uwall">
+                Pull to refresh
+            </ons-pull-hook>
             <ons-list id="myUpdWall">
 
                 <ons-list>

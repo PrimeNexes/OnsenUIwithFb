@@ -1,0 +1,272 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="utf-8" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <!-- Firebase Init -->
+    <script src="https://www.gstatic.com/firebasejs/3.6.2/firebase.js"></script>
+    <script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyDMA4hc2fAH7kQgjIxuBqVLGcgN4nvRP6I",
+    authDomain: "onsenfb-fba00.firebaseapp.com",
+    databaseURL: "https://onsenfb-fba00.firebaseio.com",
+    storageBucket: "onsenfb-fba00.appspot.com",
+    messagingSenderId: "695730046275"
+  };
+  firebase.initializeApp(config);
+    </script>
+    <!-- JS dependencies (order matters!) -->
+    <script src="scripts/platformOverrides.js"></script>
+    <script src="lib/onsen/js/onsenui.js"></script>
+
+    <!-- CSS dependencies -->
+    <link rel="stylesheet" href="lib/onsen/css/onsenui.css" />
+    <link rel="stylesheet" href="lib/onsen/css/onsen-css-components-blue-basic-theme.css" />
+
+    <title>Onsen UI</title>
+
+    <!-- App init -->
+
+
+
+</head>
+
+<body>
+    <!-- Login and Signup -->
+    <ons-navigator id="mainNavigator" page="sp.html" animation="lift"></ons-navigator>
+    <ons-template id="sp.html">
+        <ons-page id="sp">
+            <section style="padding: 8px">
+                <div style="text-align: center; font-size: 30px; margin-top: 20px; color: #000;">
+                    Wall-Play
+                </div>
+                <div style="text-align: center; font-size: 30px; margin-top: 20px; color: #000;">
+                    Connecting....
+                    <ons-progress-circular value="0" id="progessBar"></ons-progress-circular>
+                </div>
+            </section>
+        </ons-page>
+    </ons-template>
+    <ons-template id="login.html">
+        <ons-page id="login">
+            <ons-toolbar>
+                <div class="center">Login</div>
+            </ons-toolbar>
+            <section style="padding: 8px">
+                <div style="text-align: center; margin-top: 30px;">
+                    <p>
+                        <ons-input id="loginUser" modifier="underbar" placeholder="Email" float type="email"></ons-input>
+                    </p>
+                    <p>
+                        <ons-input id="loginPass" modifier="underbar" type="password" placeholder="Password" float></ons-input>
+                    </p>
+                    <p style="margin-top: 30px;">
+                        <ons-button modifier="large" id="loginBtn">Sign in</ons-button>
+                    </p>
+                    <p style="margin-top: 30px;">
+                        <ons-button modifier="large" id="signupBtn">Sign up</ons-button>
+                    </p>
+                    <p style="margin-top: 30px;">
+                        <ons-button modifier="large" id="fpassBtn">Forgot Password</ons-button>
+                    </p>
+                </div>
+
+            </section>
+        </ons-page>
+    </ons-template>
+    <ons-template id="signup.html">
+        <ons-page id="signup">
+            <ons-toolbar>
+                <div class="left"><ons-back-button>Back</ons-back-button></div>
+                <div class="center">Sign-up</div>
+            </ons-toolbar>
+            <section style="padding: 8px">
+                <div style="text-align: center; margin-top: 30px;">
+                    <p>
+                        <ons-input id="signinUser" modifier="underbar" placeholder="Email" float type="email"></ons-input>
+                    </p>
+                    <p>
+                        <ons-input id="signinPass" modifier="underbar" type="password" placeholder="Password" float></ons-input>
+                    </p>
+                    <p style="margin-top: 30px;">
+                        <ons-button modifier="large" id="makeaccBtn">Create Account</ons-button>
+                    </p>
+                </div>
+            </section>
+        </ons-page>
+    </ons-template>
+    <ons-template id="fpass.html">
+        <ons-page id="fpass">
+            <ons-toolbar>
+                <div class="left"><ons-back-button>Back</ons-back-button></div>
+                <div class="center">Forgot Password</div>
+            </ons-toolbar>
+            <section style="padding: 8px">
+                <div style="text-align: center; margin-top: 30px;">
+                    <p>
+                        <ons-input id="fpassEmail" modifier="underbar" placeholder="Email" float type="email"></ons-input>
+                    </p>
+                    <p style="margin-top: 30px;">
+                        <ons-button modifier="large" id="sendfpassBtn">Send reset Email</ons-button>
+                    </p>
+                </div>
+            </section>
+        </ons-page>
+    </ons-template>
+
+
+    <!-- Main-->
+    <ons-template id="home.html">
+        <ons-page id="home">
+            <ons-toolbar>
+                <div class="left">
+                    <ons-toolbar-button id="myAccBtn"><ons-icon icon="md-pin-account"></ons-icon></<ons-toolbar-button>
+                </div>
+                <div class="center" style="margin:auto;">
+     
+                </div>
+                <div class="right">
+                    <ons-toolbar-button id="uwallBtn">
+                        <input type="file" name="fileToUpload" id="fileToUpload" accept="image/*" capture="camera"
+                               style="width: 0.1px;height: 0.1px;opacity: 0;overflow: hidden;position: absolute;z-index: -1;" />
+                        <label for="fileToUpload">+</label>
+                    </ons-toolbar-button>
+                </div>
+            </ons-toolbar>
+            <ons-pull-hook id="pull-hook-mainwall">
+                Pull to refresh
+            </ons-pull-hook>
+            <ons-list id="mainwall"> 
+   
+               <!--<ons-list-item tappable ripple>
+                    <div class="left"><img class="list__item__thumbnail" src="http://placekitten.com/g/40/40"></div> <div class="center"><span class="list__item__title"><b>Cutest kitty TEST</b></span><span class="list__item__subtitle">Followers : </span></div>
+                    <div class="right"><ons-icon icon="md-thumb-up"><b> Likes : <b >250</b></b></div>
+                </ons-list-item>
+                    <ons-list-item tappable ripple style="padding:0px 0px 0px 6px">
+
+                        <img style="max-width:100%; " src="images/test.jpg" alt="Loading....." />
+     
+                           <ons-button modifier="large"><a style="text-decoration: none;color:inherit;" href="images/test.jpg" download>TEST Like &  Download </a></ons-button>
+
+  
+                    </ons-list-item>
+                  -->
+                    <ons-list>
+
+
+
+    </ons-page>
+    </ons-template>
+
+
+
+    <!--Main end-->
+    <!--Profile page-->
+    <ons-template id="profile.html">
+        <ons-page id="profile">
+            <ons-toolbar>
+                <div class="left"><ons-back-button>Back</ons-back-button></div>
+                <div class="center">
+                    Profile
+                </div>
+            </ons-toolbar>
+            <section style="padding: 8px">
+
+                <ons-list-item>
+                    <div class="left">
+                        <img class="list__item__thumbnail" src="http://placekitten.com/g/40/40">
+                    </div>
+                    <div class="center">
+
+                        <span class="list__item__title" id="pro">Cutest kitty</span><span class="list__item__subtitle">Followers : 1M</span>
+
+                    </div>
+                </ons-list-item>
+
+                <ons-button modifier="large" id="followBtn">Follow</ons-button>
+
+            </section>
+        </ons-page>
+    </ons-template>
+    <!--Profile page end-->
+    <!-- My Account page-->
+    <ons-template id="myAcc.html">
+        <ons-page id="myAcc">
+            <ons-toolbar>
+                <div class="left"><ons-back-button>Back</ons-back-button></div>
+                <div class="center">
+                    My Profile
+                </div>
+            </ons-toolbar>
+            <section style="padding: 8px">
+
+                <ons-list>
+                    <ons-list-item>
+                        <div class="left">
+                            <img class="list__item__thumbnail" src="http://placekitten.com/g/40/40">
+                        </div>
+                        <div class="center">
+                            <span class="list__item__title" id="my-username">How the hell there is no Username HERE !</span><span class="list__item__subtitle">Followers : </span>
+                        </div>
+                    </ons-list-item>
+                     <ons-list-item>
+
+                </ons-list>
+                <p style="margin-top: 30px;">
+                    <ons-button modifier="large" id="myUpdBtn"> My Uploads</ons-button>
+                </p>
+                <p style="margin-top: 30px;">
+                    <ons-button modifier="large" id="logoutBtn">Log-out</ons-button>
+                    </p>
+                </section>
+        </ons-page>
+    </ons-template>
+    <!--My Account page end-->
+    <!-- My Upload page-->
+    <ons-template id="myUpd.html">
+        <ons-page id="myUpd">
+            <ons-toolbar>
+                <div class="left"><ons-back-button>Back</ons-back-button></div>
+                <div class="center">
+                    My Likes and Uploads
+                </div>
+            </ons-toolbar>
+            <ons-pull-hook id="pull-hook-uwall">
+                Pull to refresh
+            </ons-pull-hook>
+            <ons-list id="myUpdWall">
+
+                <ons-list>
+        </ons-page>
+    </ons-template>
+    <!--My Upload page end-->
+    <!--downloading info  temp-->
+    <ons-template id="downloading.html">
+        <ons-dialog id="downloadingid">
+            <div style="text-align: center; padding: 10px;">
+                <p>
+                    Downloading
+                <p>
+            </div>
+        </ons-dialog>
+    </ons-template>
+    <!--downloading info temp end-->
+    <!--Uploading dialog-->
+    <ons-dialog id="uploadingDialog">
+        <div style="text-align: center; padding: 10px;">
+            <p id="whileUploading">
+                <ons-progress-circular value="0" id="progessBar"></ons-progress-circular>
+            <p>
+        </div>
+    </ons-dialog>
+    <!--Uploading dialog End-->
+    <!-- Cordova reference -->
+    <script src="cordova.js"></script>
+    <script src="scripts/index.js"></script>
+    <!-- app.js -->
+    <script src="scripts/app.js"></script>
+</body>
+</html>

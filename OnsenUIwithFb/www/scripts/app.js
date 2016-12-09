@@ -177,9 +177,30 @@ document.addEventListener('init', function (event) {
                             //Not printing liked contents
                         }
                         else {
-                            mainwall.appendChild(ons._util.createElement('<ons-list-item tappable><div class="left"><img class="list__item__thumbnail" src="http://placekitten.com/g/40/40" ></div> <div class="center"><span class="list__item__title"><b>' + data.val().uname + '</b></span><span class="list__item__subtitle">Followers:</span></div><div class="right"><ons-icon icon="md-thumb-up"><b> Likes : <b id="' + data.key + 'Likes">0</b></b></div> </ons-list-item>'));
-                            mainwall.appendChild(ons._util.createElement('<ons-list-item tappable ripple style="padding:0px 0px 0px 6px"><img style="max-width:100%;" src="' + url + '" alt="Loading....."/><ons-button modifier="large" id="' + data.key + 'OnLike">Like &<a style="text-decoration: none;color:inherit;" href="' + url + '" download="' + data.key + '" >  Download </a></ons-button></ons-list-item>'));
-                            page.querySelector('#' + data.key + 'Likes').innerHTML = data.val().likes;
+     
+                                mainwall.appendChild(ons._util.createElement('<ons-if platform="android"><ons-list-item style="background-color:#009688;" modifier="longdivider">' +
+                                '<div class="left"><img class="list__item__thumbnail" src="http://placekitten.com/g/40/40"></div>' +
+                                '<div class="center"><span class="list__item__title"style="color:white;" ><b>' + data.val().uname + '</b></span><span class="list__item__subtitle" style="color:white;">Followers </span>' +
+                                '</div><div class="right" style="color:white;"> <ons-icon icon="md-thumb-up" /><b id="' + data.key + 'Likes">0</b></div> </ons-list-item></ons-if>'));
+
+                                mainwall.appendChild(ons._util.createElement('<ons-if platform="ios other"><ons-list-item modifier="longdivider">' +
+                                '<div class="left"><img class="list__item__thumbnail" src="http://placekitten.com/g/40/40"></div>' +
+                                '<div class="center"><span class="list__item__title"><b>' + data.val().uname + '</b></span><span class="list__item__subtitle">Followers </span>' +
+                                '</div><div class="right" > <ons-icon icon="md-thumb-up" /><b id="' + data.key + 'Likes"> 0 </b></div> </ons-list-item></ons-if>'));
+                                mainwall.appendChild(ons._util.createElement('<ons-list-item tappable ripple style="padding:0px 0px 0px 6px;">'+
+                                '<img style="max-width:100%;" src="' + url + '" alt="Loading....." />' +
+                                '<ons-button modifier="large" style="-webkit-border-radius: 0px;-webkit-box-shadow: 0 0px 0px 0 ;width:20%;" id="' + data.key + 'OnLike"><ons-icon icon="md-thumb-up" /></ons-button>' +
+                                '<ons-button modifier="large" style="-webkit-border-radius: 0px;-webkit-box-shadow: 0 0px 0px 0 ;width:65%;" id="' + data.key + 'OnDownload"><ons-icon icon="md-download" /></ons-button>' +
+                                '<ons-button modifier="large" style="-webkit-border-radius: 0px;-webkit-box-shadow: 0 0px 0px 0 ;width:15%; "><ons-icon icon="fa-flag" /></ons-button></ons-list-item>'));
+
+
+
+
+
+
+                           // mainwall.appendChild(ons._util.createElement('<ons-list-item tappable><div class="left"><img class="list__item__thumbnail" src="http://placekitten.com/g/40/40" ></div> <div class="center"><span class="list__item__title"><b>' + data.val().uname + '</b></span><span class="list__item__subtitle">Followers:</span></div><div class="right"><ons-icon icon="md-thumb-up"><b> Likes : <b id="' + data.key + 'Likes">0</b></b></div> </ons-list-item>'));
+                           // mainwall.appendChild(ons._util.createElement('<ons-list-item tappable ripple style="padding:0px 0px 0px 6px"><img style="max-width:100%;" src="' + url + '" alt="Loading....."/><ons-button modifier="large" id="' + data.key + 'OnLike">Like &<a style="text-decoration: none;color:inherit;" href="' + url + '" download="' + data.key + '" >  Download </a></ons-button></ons-list-item>'));
+                            page.querySelector('#' + data.key + 'Likes').innerHTML = " "+ data.val().likes;
                             if (userId.emailVerified) {
                                 console.log('Email is verified');
                             }
@@ -194,6 +215,8 @@ document.addEventListener('init', function (event) {
                                 firebase.database().ref('/userDB/' + userId.uid + '/wallpaperLiked/' + data.key).set(true);
                                 firebase.database().ref('wallpaperDB/' + data.key).child('likes').set(data.val().likes + 1);
                                 console.log('Liked');
+                            };
+                                page.querySelector('#' + data.key + 'OnDownload').onclick = function () {
                                 var dialog = page.querySelector('#downloadingid');
                                 if (dialog) {
                                     dialog.show();
@@ -233,7 +256,11 @@ document.addEventListener('init', function (event) {
                                 );
 
 
+         
+
                             };
+
+
                         }
 
 
@@ -252,8 +279,8 @@ document.addEventListener('init', function (event) {
                 firebase.database().ref("wallpaperDB/").orderByChild('likes').on("child_added", function (data) {
 
                     if (page.querySelector('#' + data.key + 'Likes')) {
-                        console.log("Updating Likes .....");
-                        page.querySelector('#' + data.key + 'Likes').innerHTML = data.val().likes;
+                        //console.log("Updating Likes .....");
+                        page.querySelector('#' + data.key + 'Likes').innerHTML = " "+data.val().likes;
                     }
 
                 });
@@ -279,7 +306,7 @@ document.addEventListener('init', function (event) {
                 case 'action':
                     message = 'Loading...';
                     mainwall.innerHTML = "";
-                    mainwallEngine();
+                    
                     break;
             }
 
@@ -287,6 +314,7 @@ document.addEventListener('init', function (event) {
         });
         pullhookmainwall.onAction = function (done) {
             setTimeout(done, 1000);
+            mainwallEngine();
         };
         //Pull to refresh End
 
@@ -399,9 +427,19 @@ document.addEventListener('init', function (event) {
                     firebase.database().ref('/userDB/' + userId.uid + '/wallpaperLiked/' + data.key).once('value').then(function (snapshot) {
                         if (snapshot.val() == true) {
 
-                            uwall.appendChild(ons._util.createElement('<ons-list-item tappable><div class="left"><img class="list__item__thumbnail" src="http://placekitten.com/g/40/40" ></div> <div class="center"><span class="list__item__title">' + userId.displayName + '</span><span class="list__item__subtitle">Followers:</span></div><div class="right"><ons-icon icon="md-thumb-up"><b> Likes : <b id="' + data.key + 'Likes">0</b></b></div> </ons-list-item>'));
-                            uwall.appendChild(ons._util.createElement('<ons-list-item tappable ripple style="padding:0px 0px 0px 6px"><img style="max-width:100%;" src="' + url + '" alt="Loading....."/> <ons-button modifier="large"><a style="text-decoration: none;color:inherit;" href="' + url + '" download="' + data.key + '"  id="' + data.key + 'OnDwnUser" >Download</a></ons-button></ons-list-item>'));
-                            page.querySelector('#' + data.key + 'Likes').innerHTML = data.val().likes;
+                            uwall.appendChild(ons._util.createElement('<ons-if platform="android"><ons-list-item style="background-color:#009688;" modifier="longdivider">' +
+                              '<div class="left"><img class="list__item__thumbnail" src="http://placekitten.com/g/40/40"></div>' +
+                              '<div class="center"><span class="list__item__title"style="color:white;" ><b>' + data.val().uname + '</b></span><span class="list__item__subtitle" style="color:white;">Followers </span>' +
+                              '</div><div class="right" style="color:white;"> <ons-icon icon="md-thumb-up" /><b id="' + data.key + 'Likes">0</b></div> </ons-list-item></ons-if>'));
+
+                            uwall.appendChild(ons._util.createElement('<ons-if platform="ios other"><ons-list-item modifier="longdivider">' +
+                            '<div class="left"><img class="list__item__thumbnail" src="http://placekitten.com/g/40/40"></div>' +
+                            '<div class="center"><span class="list__item__title"><b>' + data.val().uname + '</b></span><span class="list__item__subtitle">Followers </span>' +
+                            '</div><div class="right" > <ons-icon icon="md-thumb-up" /><b id="' + data.key + 'Likes"> 0 </b></div> </ons-list-item></ons-if>'));
+                            uwall.appendChild(ons._util.createElement('<ons-list-item tappable ripple style="padding:0px 0px 0px 6px;">' +
+                            '<img style="max-width:100%;" src="' + url + '" alt="Loading....." />' +       
+                            '<ons-button modifier="large" style="-webkit-border-radius: 0px;-webkit-box-shadow: 0 0px 0px 0 ;width:100%;" id="' + data.key + 'OnDwnUser"><ons-icon icon="md-download" /></ons-button>'));
+                            page.querySelector('#' + data.key + 'Likes').innerHTML = " "+data.val().likes;
                         }
                         else {
                             //Ignore Likes
