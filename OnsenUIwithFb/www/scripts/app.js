@@ -172,7 +172,7 @@ document.addEventListener('init', function (event) {
                                 '<div class="center"><span class="list__item__title"style="color:white;" ><b>' + data.val().uname + '</b></span><span class="list__item__subtitle" style="color:white;">Followers </span>' +
                                 '</div><div class="right" style="color:white;"> <ons-icon icon="md-thumb-up" /><b id="' + data.key + 'Likes">0</b></div> </ons-list-item></ons-if>'));
 
-                                mainwall.appendChild(ons._util.createElement('<ons-if platform="ios other"><ons-list-item modifier="longdivider">' +
+                                mainwall.appendChild(ons._util.createElement('<ons-if platform="ios other"><ons-list-item >' +
                                 '<div class="left"><img class="list__item__thumbnail" src="http://placekitten.com/g/40/40"></div>' +
                                 '<div class="center"><span class="list__item__title"><b>' + data.val().uname + '</b></span><span class="list__item__subtitle">Followers </span>' +
                                 '</div><div class="right" > <ons-icon icon="md-thumb-up" /><b id="' + data.key + 'Likes"> 0 </b></div> </ons-list-item></ons-if>'));
@@ -423,7 +423,7 @@ document.addEventListener('init', function (event) {
                               '<div class="center"><span class="list__item__title"style="color:white;" ><b>' + data.val().uname + '</b></span><span class="list__item__subtitle" style="color:white;">Followers </span>' +
                               '</div><div class="right" style="color:white;"> <ons-icon icon="md-thumb-up" /><b id="' + data.key + 'Likes">0</b></div> </ons-list-item></ons-if>'));
 
-                            uwall.appendChild(ons._util.createElement('<ons-if platform="ios other"><ons-list-item modifier="longdivider">' +
+                            uwall.appendChild(ons._util.createElement('<ons-if platform="ios other"><ons-list-item >' +
                             '<div class="left"><img class="list__item__thumbnail" src="http://placekitten.com/g/40/40"></div>' +
                             '<div class="center"><span class="list__item__title"><b>' + data.val().uname + '</b></span><span class="list__item__subtitle">Followers </span>' +
                             '</div><div class="right" > <ons-icon icon="md-thumb-up" /><b id="' + data.key + 'Likes"> 0 </b></div> </ons-list-item></ons-if>'));
