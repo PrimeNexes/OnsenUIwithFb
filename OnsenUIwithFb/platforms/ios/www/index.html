@@ -5,6 +5,7 @@
     <meta charset="utf-8" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="mobile-web-app-capable" content="yes" />
+
     <!-- Firebase Init -->
     <script src="https://www.gstatic.com/firebasejs/3.6.2/firebase.js"></script>
     <script>
@@ -18,6 +19,7 @@
   };
   firebase.initializeApp(config);
     </script>
+
     <!-- JS dependencies (order matters!) -->
     <script src="scripts/platformOverrides.js"></script>
     <script src="lib/onsen/js/onsenui.js"></script>
@@ -25,6 +27,7 @@
     <!-- CSS dependencies -->
     <link rel="stylesheet" href="lib/onsen/css/onsenui.css" />
     <link rel="stylesheet" href="lib/onsen/css/onsen-css-components-blue-basic-theme.css" />
+
 
     <title>Onsen UI</title>
 
@@ -121,6 +124,9 @@
     <!-- Main-->
     <ons-template id="home.html">
         <ons-page id="home">
+            <ons-pull-hook id="pull-hook-mainwall">
+                Pull to refresh
+            </ons-pull-hook>
             <ons-toolbar>
                 <div class="left">
                     <ons-toolbar-button id="myAccBtn"><ons-icon icon="md-pin-account"></ons-icon></<ons-toolbar-button>
@@ -136,29 +142,17 @@
                     </ons-toolbar-button>
                 </div>
             </ons-toolbar>
-            <ons-pull-hook id="pull-hook-mainwall">
-                Pull to refresh
-            </ons-pull-hook>
-            <ons-list id="mainwall"> 
-   
-               <!--<ons-list-item tappable ripple>
-                    <div class="left"><img class="list__item__thumbnail" src="http://placekitten.com/g/40/40"></div> <div class="center"><span class="list__item__title"><b>Cutest kitty TEST</b></span><span class="list__item__subtitle">Followers : </span></div>
-                    <div class="right"><ons-icon icon="md-thumb-up"><b> Likes : <b >250</b></b></div>
-                </ons-list-item>
-                    <ons-list-item tappable ripple style="padding:0px 0px 0px 6px">
 
-                        <img style="max-width:100%; " src="images/test.jpg" alt="Loading....." />
-     
-                           <ons-button modifier="large"><a style="text-decoration: none;color:inherit;" href="images/test.jpg" download>TEST Like &  Download </a></ons-button>
+            <ons-list id="mainwall">
 
-  
-                    </ons-list-item>
-                  -->
+                <ons-lazy-repeat id="infinite-list"></ons-lazy-repeat>
+            
+
                     <ons-list>
 
 
 
-    </ons-page>
+</ons-page>
     </ons-template>
 
 
@@ -181,7 +175,7 @@
                     </div>
                     <div class="center">
 
-                        <span class="list__item__title" id="pro">Cutest kitty</span><span class="list__item__subtitle">Followers : 1M</span>
+                        <span class="list__item__title" id="profileUsername">Updating....</span><span class="list__item__subtitle" id="profileFollowers">Followers : Updating....</span>
 
                     </div>
                 </ons-list-item>
@@ -212,8 +206,6 @@
                             <span class="list__item__title" id="my-username">How the hell there is no Username HERE !</span><span class="list__item__subtitle">Followers : </span>
                         </div>
                     </ons-list-item>
-                     <ons-list-item>
-
                 </ons-list>
                 <p style="margin-top: 30px;">
                     <ons-button modifier="large" id="myUpdBtn"> My Uploads</ons-button>
@@ -228,15 +220,16 @@
     <!-- My Upload page-->
     <ons-template id="myUpd.html">
         <ons-page id="myUpd">
-            <ons-toolbar>
-                <div class="left"><ons-back-button>Back</ons-back-button></div>
-                <div class="center">
-                    My Likes and Uploads
-                </div>
-            </ons-toolbar>
             <ons-pull-hook id="pull-hook-uwall">
                 Pull to refresh
             </ons-pull-hook>
+            <ons-toolbar>
+                <div class="left"><ons-back-button>Back</ons-back-button></div>
+                <div class="center">
+                    My Uploads
+                </div>
+            </ons-toolbar>
+
             <ons-list id="myUpdWall">
 
                 <ons-list>
@@ -263,6 +256,46 @@
         </div>
     </ons-dialog>
     <!--Uploading dialog End-->
+    <!--Report temp                            TO DO                         -->
+    <ons-template id="report.html">
+        <ons-dialog id="report">
+           
+                <ons-list>
+                    <ons-list-header>Report</ons-list-header>
+                    <ons-list-item tappable>
+                        <label class="left">
+                            <ons-input name="report" type="radio" input-id="radio-1" checked></ons-input>
+                        </label>
+                        <label for="radio-1" class="center">
+                           Copyright violation
+                        </label>
+                    </ons-list-item>
+                    <ons-list-item tappable>
+                        <label class="left">
+                            <ons-input name="report" type="radio" input-id="radio-2"></ons-input>
+                        </label>
+                        <label for="radio-2" class="center">
+                            Spam
+                        </label>
+                    </ons-list-item>
+                    <ons-list-item tappable>
+                        <label class="left">
+                            <ons-input name="report" type="radio" input-id="radio-3"></ons-input>
+                        </label>
+                        <label for="radio-3" class="center">
+                            Offensive materials
+                        </label>
+                    </ons-list-item>
+                    <ons-list-item modifier="longdivider">
+                        <label class="center">
+                            <ons-button id="reportBtn">Submit</ons-button>
+                        </label>
+                    </ons-list-item>
+                </ons-list>
+
+        </ons-dialog>
+    </ons-template>
+    <!--Report end-->
     <!-- Cordova reference -->
     <script src="cordova.js"></script>
     <script src="scripts/index.js"></script>

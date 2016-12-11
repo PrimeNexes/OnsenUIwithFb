@@ -18,6 +18,9 @@
     <feature name="NetworkStatus">
         <param name="android-package" value="org.apache.cordova.networkinformation.NetworkManager" />
     </feature>
+    <feature name="wallpaper">
+        <param name="android-package" value="fc.fcstudio.wallpaper" />
+    </feature>
     <name>Wallpaper</name>
     <description>OnsenUIwithFb project to create fancy user interfaces for hybrid mobile applications. It uses uses Apache Cordova to help you build an app that targets multiple mobile platforms: Android, iOS, Windows, and Windows Phone.</description>
     <author email="dev@onsen.io" href="http://onsen.io">Pranay Desai</author>

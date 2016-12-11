@@ -31,6 +31,10 @@
                         {
                             "xml": "<feature name=\"NetworkStatus\"><param name=\"android-package\" value=\"org.apache.cordova.networkinformation.NetworkManager\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"wallpaper\"><param name=\"android-package\" value=\"fc.fcstudio.wallpaper\" /></feature>",
+                            "count": 1
                         }
                     ]
                 }
@@ -44,6 +48,10 @@
                         },
                         {
                             "xml": "<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<uses-permission android:name=\"android.permission.SET_WALLPAPER\" />",
                             "count": 1
                         }
                     ]
@@ -68,6 +76,9 @@
             "PACKAGE_NAME": "io.onsen.sampleapp"
         },
         "cordova-plugin-network-information": {
+            "PACKAGE_NAME": "io.onsen.sampleapp"
+        },
+        "cordova-plugin-wallpaper": {
             "PACKAGE_NAME": "io.onsen.sampleapp"
         }
     },
@@ -280,6 +291,13 @@
             "clobbers": [
                 "Connection"
             ]
+        },
+        {
+            "file": "plugins/cordova-plugin-wallpaper/www/wallpaper.js",
+            "id": "cordova-plugin-wallpaper.wallpaper",
+            "clobbers": [
+                "wallpaper"
+            ]
         }
     ],
     "plugin_metadata": {
@@ -288,6 +306,7 @@
         "cordova-plugin-whitelist": "1.3.0",
         "cordova-plugin-file": "4.3.0",
         "cordova-plugin-file-transfer": "1.6.0",
-        "cordova-plugin-network-information": "1.3.0"
+        "cordova-plugin-network-information": "1.3.0",
+        "cordova-plugin-wallpaper": "0.1.0"
     }
 }

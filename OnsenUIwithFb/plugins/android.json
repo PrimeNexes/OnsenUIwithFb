@@ -21,6 +21,9 @@
         },
         "cordova-plugin-network-information": {
             "PACKAGE_NAME": "io.onsen.sampleapp"
+        },
+        "cordova-plugin-wallpaper": {
+            "PACKAGE_NAME": "io.onsen.sampleapp"
         }
     },
     "dependent_plugins": {

@@ -207,6 +207,13 @@ module.exports = [
         "clobbers": [
             "Connection"
         ]
+    },
+    {
+        "file": "plugins/cordova-plugin-wallpaper/www/wallpaper.js",
+        "id": "cordova-plugin-wallpaper.wallpaper",
+        "clobbers": [
+            "wallpaper"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -217,7 +224,8 @@ module.exports.metadata =
     "cordova-plugin-whitelist": "1.3.0",
     "cordova-plugin-file": "4.3.0",
     "cordova-plugin-file-transfer": "1.6.0",
-    "cordova-plugin-network-information": "1.3.0"
+    "cordova-plugin-network-information": "1.3.0",
+    "cordova-plugin-wallpaper": "0.1.0"
 };
 // BOTTOM OF METADATA
 });

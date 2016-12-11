@@ -38,12 +38,12 @@
     <allow-intent href="itms-apps:*" />
     <vs:features />
     <preference name="ErrorUrl" value="" />
+    <preference name="DisallowOverscroll" value="true" />
     <preference name="SuppressesLongPressGesture" value="false" />
     <preference name="Suppresses3DTouchGesture" value="false" />
     <preference name="CameraUsesGeolocation" value="false" />
     <preference name="windows-target-version" value="8.1" />
     <preference name="windows-phone-target-version" value="8.1" />
-    <preference name="DisallowOverscroll" value="true" />
     <preference name="Orientation" value="default" />
     <preference name="loglevel" value="DEBUG" />
     <preference name="AndroidLaunchMode" value="singleTop" />

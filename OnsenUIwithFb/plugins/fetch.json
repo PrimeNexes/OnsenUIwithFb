@@ -46,5 +46,13 @@
         },
         "is_top_level": true,
         "variables": {}
+    },
+    "cordova-plugin-wallpaper": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-wallpaper"
+        },
+        "is_top_level": true,
+        "variables": {}
     }
 }
