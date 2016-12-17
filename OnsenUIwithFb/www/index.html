@@ -39,7 +39,7 @@
 
 <body>
     <!-- Login and Signup -->
-    <ons-navigator id="mainNavigator" page="sp.html" animation="lift"></ons-navigator>
+    <ons-navigator id="mainNavigator" page="sp.html" animation="fade"></ons-navigator>
     <ons-template id="sp.html">
         <ons-page id="sp">
             <section style="padding: 8px">
@@ -123,29 +123,78 @@
 
     <!-- Main-->
     <ons-template id="home.html">
-        <ons-page id="home">
+        <ons-page id="home" >
+            <ons-toolbar>
+                  <table style="height:inherit;width:inherit;text-align:center;">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <ons-toolbar-button id="myAccBtn"><ons-icon icon="md-pin-account" size="30px" style="padding-top:10px;"></ons-icon></ons-toolbar-button>
+                                </td>
+                                <td>
+                                    <ons-toolbar-button id="catBtn"><ons-icon icon="md-search" size="30px" style="padding-top:10px;"></ons-icon></ons-toolbar-button>
+                                </td>
+                                <td>
+
+                                    <ons-toolbar-button id="homeBtn"><ons-icon icon="md-home"size="30px" style="padding-top:10px;"></ons-icon></ons-toolbar-button>
+                                </td>
+                                <td>
+                                    <ons-toolbar-button id="myLikesBtn"><ons-icon icon="fa-heart" size="30px" style="padding-top:10px;"></ons-icon></ons-toolbar-button>
+                                </td>
+                                <td>
+                                    <ons-toolbar-button id="uwallBtn">
+                                        <input type="file" name="fileToUpload" id="fileToUpload" accept="image/*" capture="camera"
+                                               style="width: 0.1px;height: 0.1px;opacity: 0;overflow: hidden;position: absolute;z-index: -1;" />
+                                        <label for="fileToUpload"><ons-icon icon="md-plus"size="30px" style="padding-top:10px;"></label>
+                                    </ons-toolbar-button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+          
+            </ons-toolbar>
+
+
             <ons-pull-hook id="pull-hook-mainwall">
                 Pull to refresh
             </ons-pull-hook>
-            <ons-toolbar>
-                <div class="left">
-                    <ons-toolbar-button id="myAccBtn"><ons-icon icon="md-pin-account"></ons-icon></<ons-toolbar-button>
-                </div>
-                <div class="center" style="margin:auto;">
-     
-                </div>
-                <div class="right">
-                    <ons-toolbar-button id="uwallBtn">
-                        <input type="file" name="fileToUpload" id="fileToUpload" accept="image/*" capture="camera"
-                               style="width: 0.1px;height: 0.1px;opacity: 0;overflow: hidden;position: absolute;z-index: -1;" />
-                        <label for="fileToUpload">+</label>
-                    </ons-toolbar-button>
-                </div>
-            </ons-toolbar>
-            <ons-fab position="bottom right" id="refresh">
-                <ons-icon icon="md-refresh"></ons-icon>
-            </ons-fab>
-            <ons-list id="mainwall">
+            <ons-list id="mainwall" >
+            
+                    <ons-list-item ripple  modifier="longdivider" style="padding-bottom:0px;padding-top:0px;">
+                        <div class="left"><img class="list__item__thumbnail" src="http://placekitten.com/g/40/40" style="color:white;"></div>
+                        <div class="center" style="padding:0px 0px 0px 0px;">
+                            <span class="list__item__title"><b>CKITTEN</b></span><span class="list__item__subtitle" >Followers :</span>                 
+                        </div>
+                        <div class="right" style="opacity:0.75;">
+                               <ons-icon icon="md-thumb-up" /><b id="' + data.key + 'Likes"> 0</b>                
+                            </div>
+                    </ons-list-item>
+                    <ons-list-item ripple style="padding:0px 0px 0px 0px;" modifier="nodivider">
+                        <div class="center" style="padding:0px 0px 0px 0px;">
+                            <img style="max-width:100%;" src="images/test.jpg" alt="Loading....." />
+                            <ons-button modifier="large" style="-webkit-border-radius: 0px;-webkit-box-shadow: 0 0px 0px 0 ;width:15%;" id="' + data.key + 'OnLike"><ons-icon icon="md-thumb-up" /></ons-button>
+                            <ons-button modifier="large" style="-webkit-border-radius: 0px;-webkit-box-shadow: 0 0px 0px 0 ;width:70%;" id="' + data.key + 'OnDownload"><a style="text-decoration: none;color:inherit;" href="' + url + '" download="' + data.key + '"><ons-icon icon="md-download" /></a></ons-button>
+                            <ons-button modifier="large" style="-webkit-border-radius: 0px;-webkit-box-shadow: 0 0px 0px 0 ;width:15%;" id="' + data.key + 'OnReport"><ons-icon icon="fa-flag" /></ons-button>
+                           </div>
+                          </ons-list-item>
+
+                <ons-list-item tappable ripple modifier="longdivider"  style="padding-bottom:0px;padding-top:0px;border-style:solid; border-width:1px;border-color:#ddd;box-shadow:2px 2px 1px #eee;">
+                    <div class="left"><img class="list__item__thumbnail" src="http://placekitten.com/g/40/40" style="color:white;"></div>
+                    <div class="center">
+                        <span class="list__item__title" ><b>CKITTEN</b></span><span class="list__item__subtitle" >Followers :</span>
+
+                    </div><div class="right"> <ons-icon icon="md-thumb-up" /><b id="' + data.key + 'Likes"> 0 </b></div>
+                </ons-list-item>
+                <ons-list-item tappable ripple style="padding:0px 0px 0px 0px;" modifier="nodivider">
+                    <div class="center" style="padding:0px 0px 0px 0px;">
+                        <img style="max-width:100%;" src="images/test.jpg" alt="Loading....." />
+                        <ons-button modifier="large" style="-webkit-border-radius: 0px;-webkit-box-shadow: 0 0px 0px 0 ;width:15%;" id="' + data.key + 'OnLike"><ons-icon icon="md-thumb-up" /></ons-button>
+                        <ons-button modifier="large" style="-webkit-border-radius: 0px;-webkit-box-shadow: 0 0px 0px 0 ;width:70%;" id="' + data.key + 'OnDownload"><a style="text-decoration: none;color:inherit;" href="' + url + '" download="' + data.key + '"><ons-icon icon="md-download" /></a></ons-button>
+                        <ons-button modifier="large" style="-webkit-border-radius: 0px;-webkit-box-shadow: 0 0px 0px 0 ;width:15%;" id="' + data.key + 'OnReport"><ons-icon icon="fa-flag" /></ons-button>
+                    </div>
+                </ons-list-item>
+
+              
             <ons-list>
 
             </ons-page>
@@ -158,10 +207,7 @@
     <ons-template id="profile.html">
         <ons-page id="profile">
             <ons-toolbar>
-                <div class="left"><ons-back-button>Back</ons-back-button></div>
-                <div class="center">
-                    Profile
-                </div>
+                <ons-back-button>Back</ons-back-button>
             </ons-toolbar>
             <section style="padding: 8px">
 
@@ -185,12 +231,36 @@
     <!-- My Account page-->
     <ons-template id="myAcc.html">
         <ons-page id="myAcc">
+
             <ons-toolbar>
-                <div class="left"><ons-back-button>Back</ons-back-button></div>
-                <div class="center">
-                    My Profile
-                </div>
+                <table style="height:inherit;width:inherit;text-align:center;">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <ons-toolbar-button id="myAccBtn"><ons-icon icon="md-pin-account" size="30px" style="padding-top:10px;"></ons-icon></ons-toolbar-button>
+                            </td>
+                            <td>
+                                <ons-toolbar-button id="catBtn"><ons-icon icon="md-search" size="30px" style="padding-top:10px;"></ons-icon></ons-toolbar-button>
+                            </td>
+                            <td>
+
+                                <ons-toolbar-button id="homeBtn"><ons-icon icon="md-home" size="30px" style="padding-top:10px;"></ons-icon></ons-toolbar-button>
+                            </td>
+                            <td>
+                                <ons-toolbar-button id="myLikesBtn"><ons-icon icon="fa-heart" size="30px" style="padding-top:10px;"></ons-icon></ons-toolbar-button>
+                            </td>
+                            <td>
+                                <ons-toolbar-button id="uwallBtn">
+                                    <input type="file" name="fileToUpload" id="fileToUpload" accept="image/*" capture="camera"
+                                           style="width: 0.1px;height: 0.1px;opacity: 0;overflow: hidden;position: absolute;z-index: -1;" />
+                                    <label for="fileToUpload"><ons-icon icon="md-plus" size="30px" style="padding-top:10px;"></label>
+                                </ons-toolbar-button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </ons-toolbar>
+
             <section style="padding: 8px">
 
                 <ons-list>
@@ -203,9 +273,6 @@
                         </div>
                     </ons-list-item>
                 </ons-list>
-                <p style="margin-top: 30px;">
-                    <ons-button modifier="large" id="myUpdBtn"> My Likes and Uploads</ons-button>
-                </p>
                 <p style="margin-top: 30px;">
                     <ons-button modifier="large" id="logoutBtn">Log-out</ons-button>
                     </p>
@@ -220,10 +287,32 @@
                 Pull to refresh
             </ons-pull-hook>
             <ons-toolbar>
-                <div class="left"><ons-back-button>Back</ons-back-button></div>
-                <div class="center">
-                    My Likes and Uploads
-                </div>
+                <table style="height:inherit;width:inherit;text-align:center;">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <ons-toolbar-button id="myAccBtn"><ons-icon icon="md-pin-account" size="30px" style="padding-top:10px;"></ons-icon></ons-toolbar-button>
+                            </td>
+                            <td>
+                                <ons-toolbar-button id="catBtn"><ons-icon icon="md-search" size="30px" style="padding-top:10px;"></ons-icon></ons-toolbar-button>
+                            </td>
+                            <td>
+
+                                <ons-toolbar-button id="homeBtn"><ons-icon icon="md-home" size="30px" style="padding-top:10px;"></ons-icon></ons-toolbar-button>
+                            </td>
+                            <td>
+                                <ons-toolbar-button id="myLikesBtn"><ons-icon icon="fa-heart" size="30px" style="padding-top:10px;"></ons-icon></ons-toolbar-button>
+                            </td>
+                            <td>
+                                <ons-toolbar-button id="uwallBtn">
+                                    <input type="file" name="fileToUpload" id="fileToUpload" accept="image/*" capture="camera"
+                                           style="width: 0.1px;height: 0.1px;opacity: 0;overflow: hidden;position: absolute;z-index: -1;" />
+                                    <label for="fileToUpload"><ons-icon icon="md-plus" size="30px" style="padding-top:10px;"></label>
+                                </ons-toolbar-button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </ons-toolbar>
 
             <ons-list id="myUpdWall">
@@ -232,6 +321,62 @@
         </ons-page>
     </ons-template>
     <!--My Upload page end-->
+    <!-- Categorie page-->
+    <ons-template id="cat.html">
+        <ons-page id="cat">
+
+            <ons-toolbar>
+                <table style="height:inherit;width:inherit;text-align:center;">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <ons-toolbar-button id="myAccBtn"><ons-icon icon="md-pin-account" size="30px" style="padding-top:10px;"></ons-icon></ons-toolbar-button>
+                            </td>
+                            <td>
+                                <ons-toolbar-button id="catBtn"><ons-icon icon="md-search" size="30px" style="padding-top:10px;"></ons-icon></ons-toolbar-button>
+                            </td>
+                            <td>
+
+                                <ons-toolbar-button id="homeBtn"><ons-icon icon="md-home" size="30px" style="padding-top:10px;"></ons-icon></ons-toolbar-button>
+                            </td>
+                            <td>
+                                <ons-toolbar-button id="myLikesBtn"><ons-icon icon="fa-heart" size="30px" style="padding-top:10px;"></ons-icon></ons-toolbar-button>
+                            </td>
+                            <td>
+                                <ons-toolbar-button id="uwallBtn">
+                                    <input type="file" name="fileToUpload" id="fileToUpload" accept="image/*" capture="camera"
+                                           style="width: 0.1px;height: 0.1px;opacity: 0;overflow: hidden;position: absolute;z-index: -1;" />
+                                    <label for="fileToUpload"><ons-icon icon="md-plus" size="30px" style="padding-top:10px;"></label>
+                                </ons-toolbar-button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </ons-toolbar>
+
+            <ons-list modifier="inset">
+                <ons-list-header>Categories</ons-list-header>
+                <ons-list-item>
+                    <div class="left">
+                        <img class="list__item__thumbnail" src="http://placekitten.com/g/40/40">
+                    </div>
+                    <div class="center">
+                        <span class="list__item__title">Cutest kitty</span><span class="list__item__subtitle">On the Internet</span>
+                    </div>
+                </ons-list-item>
+                <ons-list-item>
+                    <div class="left">
+                        <img class="list__item__thumbnail" src="http://placekitten.com/g/40/40">
+                    </div>
+                    <div class="center">
+                        <span class="list__item__title">Cutest kitty</span><span class="list__item__subtitle">On the Internet</span>
+                    </div>
+                </ons-list-item>
+
+                <ons-list>
+</ons-page>
+    </ons-template>
+    <!--Categorie page end-->
     <!--downloading info  temp-->
     <ons-template id="downloading.html">
         <ons-dialog id="downloadingid">
@@ -296,7 +441,9 @@
     <!-- Cordova reference -->
     <script src="cordova.js"></script>
     <script src="scripts/index.js"></script>
+
     <!-- app.js -->
     <script src="scripts/app.js"></script>
+  
 </body>
 </html>

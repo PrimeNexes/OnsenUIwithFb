@@ -142,17 +142,13 @@
                     </ons-toolbar-button>
                 </div>
             </ons-toolbar>
-
+            <ons-fab position="bottom right" id="refresh">
+                <ons-icon icon="md-refresh"></ons-icon>
+            </ons-fab>
             <ons-list id="mainwall">
+            <ons-list>
 
-                <ons-lazy-repeat id="infinite-list"></ons-lazy-repeat>
-            
-
-                    <ons-list>
-
-
-
-</ons-page>
+            </ons-page>
     </ons-template>
 
 
@@ -208,7 +204,7 @@
                     </ons-list-item>
                 </ons-list>
                 <p style="margin-top: 30px;">
-                    <ons-button modifier="large" id="myUpdBtn"> My Uploads</ons-button>
+                    <ons-button modifier="large" id="myUpdBtn"> My Likes and Uploads</ons-button>
                 </p>
                 <p style="margin-top: 30px;">
                     <ons-button modifier="large" id="logoutBtn">Log-out</ons-button>
@@ -226,7 +222,7 @@
             <ons-toolbar>
                 <div class="left"><ons-back-button>Back</ons-back-button></div>
                 <div class="center">
-                    My Uploads
+                    My Likes and Uploads
                 </div>
             </ons-toolbar>
 
@@ -296,6 +292,7 @@
         </ons-dialog>
     </ons-template>
     <!--Report end-->
+
     <!-- Cordova reference -->
     <script src="cordova.js"></script>
     <script src="scripts/index.js"></script>

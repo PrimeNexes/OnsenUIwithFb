@@ -13,11 +13,10 @@ function wallLayout(mainwall, data, followersLoop,url,isUpload) {
 
     if (isUpload === true) {
         mainwall.appendChild(ons._util.createElement(
-        '<ons-list-item tappable ripple style="padding:0px 0px 0px 6px;">' +
+'<ons-list-item tappable ripple style="padding:0px 0px 0px 6px;">' +
         '<img style="max-width:100%;" src="' + url + '" alt="Loading....." />' +
-        
-        '<ons-button modifier="large" style="-webkit-border-radius: 0px;-webkit-box-shadow: 0 0px 0px 0 ;width:75%;" id="' + data.key + 'OnDownload"><a style="text-decoration: none;color:inherit;" href="' + url + '" download="' + data.key + '" ><ons-icon icon="md-download" /></a></ons-button></ons-list-item>'+
-         '<ons-button modifier="large" style="-webkit-border-radius: 0px;-webkit-box-shadow: 0 0px 0px 0 ;width:25%;" id="' + data.key + 'OnReport"><ons-icon icon="fa-flag" /></ons-button></ons-list-item>'));
+        '<ons-button modifier="large" style="-webkit-border-radius: 0px;-webkit-box-shadow: 0 0px 0px 0 ;width:85%;" id="' + data.key + 'OnDownload"><a style="text-decoration: none;color:inherit;" href="' + url + '" download="' + data.key + '" ><ons-icon icon="md-download" /></a></ons-button>' +
+        '<ons-button modifier="large" style="-webkit-border-radius: 0px;-webkit-box-shadow: 0 0px 0px 0 ;width:15%;" id="' + data.key + 'OnReport"><ons-icon icon="fa-flag" /></ons-button></ons-list-item>'));
     }
     else {
         mainwall.appendChild(ons._util.createElement(
@@ -150,9 +149,9 @@ document.addEventListener('init', function (event) {
             var fpassEmail = page.querySelector('#fpassEmail').value;
             var auth = firebase.auth();
             auth.sendPasswordResetEmail(fpassEmail).then(function () {
-                ons.notification.alert("Email sent.Reset your password via the link provided");
+                ons.notification.confirm("Email sent.Reset your password via the link provided");
             }, function (error) {
-                ons.notification.alert("No such email found.");
+                ons.notification.confirm("No such email found.");
             });
         }
 
@@ -258,13 +257,13 @@ document.addEventListener('init', function (event) {
                                     var fileURL = "///storage/emulated/0/MyWallpapers/wall" + data.key + ".jpeg";
                                     fileTransfer.download(
                                        url, fileURL, function (entry) {
-                                           ons.notification.alert("Download completed");
+                                           ons.notification.confirm("Download completed");
                                        },
 
                                        function (error) {
-                                           ons.notification.alert("Download error source :" + error.source);
-                                           ons.notification.alert("Download error target :" + error.target);
-                                           ons.notification.alert("Download error code :" + error.code);
+                                           ons.notification.confirm("Download error source :" + error.source);
+                                           ons.notification.confirm("Download error target :" + error.target);
+                                           ons.notification.confirm("Download error code :" + error.code);
                                        },
                                        false, {
                                            headers: {
@@ -307,6 +306,9 @@ document.addEventListener('init', function (event) {
                 });
             }
             var likeInterval = setInterval(likesUpdate, 5000);
+            //On Refresh
+            document.getElementById('refresh').onclick = function () { console.log("clicking"); mainwall.innerHTML = ""; mainwallEngine(); }
+
         }
         //Feed Engine End
 
@@ -376,11 +378,11 @@ document.addEventListener('init', function (event) {
                             firebase.database().ref('userDB/' + userId.uid + '/wallpaperLiked/' + newPostKey).set(true);
 
                             document.getElementById('uploadingDialog').hide();
-                            ons.notification.alert("Uploaded Successfully");
+                            ons.notification.confirm("Uploaded Successfully");
                         });
                     }
                     else {
-                        ons.notification.alert("You can't upload Low Quality Wallpapers ! Wallpaper must have Heigh 1920 and Width 1080");
+                        ons.notification.confirm("You can't upload Low Quality Wallpapers ! Wallpaper must have Heigh 1920 and Width 1080");
                         document.getElementById('uploadingDialog').hide();
                     }
                 }
@@ -412,7 +414,7 @@ document.addEventListener('init', function (event) {
         page.querySelector('#logoutBtn').onclick = function () {
             //Logout
             firebase.auth().signOut().then(function () {
-                ons.notification.alert("Logout Successful");
+                ons.notification.confirm("Logout Successful");
                 document.querySelector('#mainNavigator').pushPage('login.html');
             }, function (error) {
                 ons.notification.alert("Error ! Try again");
@@ -450,6 +452,10 @@ document.addEventListener('init', function (event) {
                                 //Ignore Likes
 
                             }
+                            if (userId.emailVerified) {}
+                            else {
+                                document.getElementById(data.key + 'OnReport').setAttribute("disabled", "");
+                            }
                             //OnDownload Click
                             document.getElementById(data.key + 'OnDownload').onclick = function () {
                                 var dialog = page.querySelector('#downloadingid');
@@ -473,14 +479,14 @@ document.addEventListener('init', function (event) {
                                 fileTransfer.download(
                                    url, fileURL, function (entry) {
 
-                                       ons.notification.alert("Download completed");
+                                       ons.notification.confirm("Download completed");
                                    },
 
                                    function (error) {
 
-                                       ons.notification.alert("Download error source :" + error.source);
-                                       ons.notification.alert("Download error target :" + error.target);
-                                       ons.notification.alert("Download error code :" + error.code);
+                                       ons.notification.confirm("Download error source :" + error.source);
+                                       ons.notification.confirm("Download error target :" + error.target);
+                                       ons.notification.confirm("Download error code :" + error.code);
                                    },
 
                                    false, {
