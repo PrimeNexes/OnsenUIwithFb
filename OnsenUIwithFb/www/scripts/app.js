@@ -1,8 +1,10 @@
 ﻿//Main
+
 var myNavigator = document.getElementById('mainNavigator');
 document.addEventListener('init', function (event)
 {   firebase.database().goOnline();
 var page = event.target;
+
 
 
 var nav = function () {
@@ -23,6 +25,14 @@ var nav = function () {
 
 
 }
+
+//On Profile Click for Main wall and Upload Wall
+var onClickDataVar;
+var onClickData = function (data) {
+    onClickDataVar = data;
+}
+    //
+
     if (page.id === 'sp')
     {
         const promise = firebase.auth().onAuthStateChanged(function (user)
@@ -156,7 +166,7 @@ var nav = function () {
 
         //Feed Engine
         function mainwallEngine()
-        {
+        {  
             var userId = firebase.auth().currentUser;
             //Check Email verification
             var uploadBtn = document.getElementById('fileToUpload');
@@ -189,7 +199,7 @@ var nav = function () {
                                 +'<div class="center"><span class="list__item__title"><b class="' + data.val().uid + 'User">' + data.val().uname + '</b></span><span class="list__item__subtitle">Followers : ' + followersLoop.val().followedByInt + '</span>'
                                 + '</div><div class="right" style="opacity:0.75;"><ons-icon icon="md-thumb-up" /><b id="' + data.key + 'Likes"> 0 </b></div></ons-list-item>'
                                 + '<ons-list-item ripple style="padding:0px 0px 0px 0px;" modifier="nodivider">'
-                                + '<div class="center" style="padding:0px 0px 0px 0px;"><img style="max-width:100%;" src="' + url + '" alt="Loading....." />'
+                                + '<div class="center" style="padding:0px 0px 0px 0px;"><img style="max-width:100%;width:100%;" src="' + url + '" alt="Loading....." />'
                                 +'<ons-button modifier="large" style="-webkit-border-radius: 0px;-webkit-box-shadow: 0 0px 0px 0 ;width:20%;" id="' + data.key + 'OnLike"><ons-icon icon="md-thumb-up" /></ons-button>'
                                 +'<ons-button modifier="large" style="-webkit-border-radius: 0px;-webkit-box-shadow: 0 0px 0px 0 ;width:65%;" id="' + data.key + 'OnDownload"><a style="text-decoration: none;color:inherit;" href="' + url + '" download="' + data.key + '" ><ons-icon icon="md-download" /></a></ons-button>'
                                 + '<ons-button modifier="large" style="-webkit-border-radius: 0px;-webkit-box-shadow: 0 0px 0px 0 ;width:15%;" id="' + data.key + 'OnReport"><ons-icon icon="fa-flag" /></ons-button></div></ons-list-item></div>'));
@@ -207,49 +217,50 @@ var nav = function () {
                                     console.log('Email is not verified');
 
                                 }
+                                //TODO
+                                //onProfile Click                         
+                                                               
                                 var profileClassId = document.getElementsByClassName(data.val().uid + "User");
-
+                                
                                 for (var i = 0; i < profileClassId.length; i++)
                                 {
+                                    
                                     profileClassId[i].onclick = function ()
                                     {
-
+                                        onClickData(data);                                        
                                         document.querySelector('#mainNavigator').pushPage('profile.html');
                                     }
                                 };
                                 document.addEventListener("show", function (event)
                                 {
                                     if (event.target.id === 'profile') {                                    
-                                        document.getElementById('profileUsername').innerHTML = data.val().uname;
-                                        firebase.database().ref('/userDB/' + data.val().uid + '/followedBy/followedByInt').once('value').then(function (profileData)
-                                        {
+                                        document.getElementById('profileUsername').innerHTML = onClickDataVar.val().uname;
+                                        firebase.database().ref('/userDB/' + onClickDataVar.val().uid + '/followedBy/followedByInt').once('value').then(function (profileData) {
                                             document.getElementById('profileFollowers').innerHTML = "Followers : " + profileData.val();
-                                            firebase.database().ref('/userDB/' + userId.uid + '/following/' + data.val().uid).once('value').then(function (checkiffolwing)
-                                            {
-                                                if (checkiffolwing.val() === null)
-                                                {
+                                       
+                                            firebase.database().ref('/userDB/' + userId.uid + '/following/' + onClickDataVar.val().uid).once('value').then(function (checkiffolwing) {
+                                                if (checkiffolwing.val() === null) {
 
-                                                    document.getElementById('followBtn').onclick = function ()
-                                                    {
-                                                        firebase.database().ref('/userDB/' + userId.uid + '/following/' + data.val().uid).set(true);
+                                                    document.getElementById('followBtn').onclick = function () {
+                                                   
+                                                        firebase.database().ref('/userDB/' + userId.uid + '/following/' + onClickDataVar.val().uid).set(true);
                                                         console.log("setting follwing in current user");
-                                                        firebase.database().ref('/userDB/' + data.val().uid + '/followedBy/' + userId.uid).set(true);
+                                                        firebase.database().ref('/userDB/' + onClickDataVar.val().uid + '/followedBy/' + userId.uid).set(true);
                                                         console.log("setting follwed by in profile user");
-                                                        firebase.database().ref('/userDB/' + data.val().uid + '/followedBy/followedByInt').set(profileData.val() + 1);
+                                                        firebase.database().ref('/userDB/' + onClickDataVar.val().uid + '/followedBy/followedByInt').set(profileData.val() + 1);
                                                         console.log("setting follwedbyInt in profile user");
                                                         this.setAttribute("disabled", "true");
                                                     }
 
                                                 }
-                                                else if (checkiffolwing.val() === true)
-                                                {
+                                                else if (checkiffolwing.val() === true) {
                                                     document.getElementById('followBtn').setAttribute("disabled", "true");
                                                 }
                                             });
                                         });
                                     }
                                 });
-
+                                //TODO
                                 // onLike Click
                                 page.querySelector('#' + data.key + 'OnLike').onclick = function ()
                                 {
@@ -447,7 +458,7 @@ var nav = function () {
     else if (page.id === 'profile') {
 
         //Navigator
-        nav();
+        //nav();
 
     }
     else if (page.id === 'cat') {
@@ -473,10 +484,10 @@ var nav = function () {
                         firebase.database().ref('/userDB/' + data.val().uid + '/followedBy/').on('value', function (followersLoop) {
                             if (snapshot.val() == true) {
                                 uwall.appendChild(ons._util.createElement('<div><ons-list-item ripple  modifier="longdivider" style="padding-bottom:0px;padding-top:0px;"><div class="left"><img class="list__item__thumbnail" src="http://placekitten.com/g/40/40"></div>'
-                                +'<div class="center"><span class="list__item__title"><b class="' + data.val().uid + 'User">' + data.val().uname + '</b></span><span class="list__item__subtitle">Followers : ' + followersLoop.val().followedByInt + '</span>'
+                                +'<div class="center"><span class="list__item__title"><b class="' + data.val().uid + 'Likes">' + data.val().uname + '</b></span><span class="list__item__subtitle">Followers : ' + followersLoop.val().followedByInt + '</span>'
                                 + '</div><div class="right" style="opacity:0.75;"><ons-icon icon="md-thumb-up" /><b id="' + data.key + 'Likes"> 0 </b></div></ons-list-item>' +
                                 '<ons-list-item ripple style="padding:0px 0px 0px 0px;" modifier="nodivider">' +
-                                '<div class="center" style="padding:0px 0px 0px 0px;"><img style="max-width:100%;" src="' + url + '" alt="Loading....." />' +
+                                '<div class="center" style="padding:0px 0px 0px 0px;"><img style="max-width:100%;width:100%;" src="' + url + '" alt="Loading....." />' +
                                 '<ons-button modifier="large" style="-webkit-border-radius: 0px;-webkit-box-shadow: 0 0px 0px 0 ;width:85%;" id="' + data.key + 'OnDownload"><a style="text-decoration: none;color:inherit;" href="' + url + '" download="' + data.key + '" ><ons-icon icon="md-download" /></a></ons-button>' +
                                 '<ons-button modifier="large" style="-webkit-border-radius: 0px;-webkit-box-shadow: 0 0px 0px 0 ;width:15%;" id="' + data.key + 'OnReport"><ons-icon icon="fa-flag" /></ons-button></div></ons-list-item></div>'));
                                page.querySelector('#' + data.key + 'Likes').innerHTML = " " + data.val().likes;
@@ -489,6 +500,50 @@ var nav = function () {
                             else {
                                 document.getElementById(data.key + 'OnReport').setAttribute("disabled", "");
                             }
+
+
+                            //onProfile Click                         
+
+                            var profileClassId = document.getElementsByClassName(data.val().uid + "Likes");
+
+                            for (var i = 0; i < profileClassId.length; i++) {
+
+                                profileClassId[i].onclick = function () {
+                                    onClickData(data);
+                                    document.querySelector('#mainNavigator').pushPage('profile.html');
+                                }
+                            };
+                            document.addEventListener("show", function (event) {
+                                if (event.target.id === 'profile') {
+                                    document.getElementById('profileUsername').innerHTML = onClickDataVar.val().uname;
+                                    firebase.database().ref('/userDB/' + onClickDataVar.val().uid + '/followedBy/followedByInt').once('value').then(function (profileData) {
+                                        document.getElementById('profileFollowers').innerHTML = "Followers : " + profileData.val();
+
+                                        firebase.database().ref('/userDB/' + userId.uid + '/following/' + onClickDataVar.val().uid).once('value').then(function (checkiffolwing) {
+                                            if (checkiffolwing.val() === null) {
+
+                                                document.getElementById('followBtn').onclick = function () {
+
+                                                    firebase.database().ref('/userDB/' + userId.uid + '/following/' + onClickDataVar.val().uid).set(true);
+                                                    console.log("setting follwing in current user");
+                                                    firebase.database().ref('/userDB/' + onClickDataVar.val().uid + '/followedBy/' + userId.uid).set(true);
+                                                    console.log("setting follwed by in profile user");
+                                                    firebase.database().ref('/userDB/' + onClickDataVar.val().uid + '/followedBy/followedByInt').set(profileData.val() + 1);
+                                                    console.log("setting follwedbyInt in profile user");
+                                                    this.setAttribute("disabled", "true");
+                                                }
+
+                                            }
+                                            else if (checkiffolwing.val() === true) {
+                                                document.getElementById('followBtn').setAttribute("disabled", "true");
+                                            }
+                                        });
+                                    });
+                                }
+                            });
+                            
+
+
                             //OnDownload Click
                             document.getElementById(data.key + 'OnDownload').onclick = function () {
                                 var dialog = page.querySelector('#downloadingid');
