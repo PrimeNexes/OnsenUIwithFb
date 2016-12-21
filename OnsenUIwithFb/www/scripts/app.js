@@ -28,9 +28,10 @@ var nav = function () {
 
 //On Profile Click for Main wall and Upload Wall
 var onClickDataVar;
+var fromPage;
 var onClickData = function (data) {
     onClickDataVar = data;
-}
+};
     //
 
     if (page.id === 'sp')
@@ -114,17 +115,19 @@ var onClickData = function (data) {
                     var str = user.email;
                     var i = str.indexOf("@");
                     var n = str.substr(0, i);
-                    user.updateProfile({ displayName: n});
+                    user.updateProfile({ displayName: n });
                     console.log("User Created with displayName " + n);
                     //Set Display name of user End
-
                     user.sendEmailVerification().then(function () {
                     //create userDB 
-                    var userId = firebase.auth().currentUser.uid;
-                    firebase.database().ref('userDB/' + userId).set({ followedBy: { followedByInt: 0 }, following: { followingInt: 0 }, uploads: 0, wallpaperLiked: 0 });
+                        var userId = firebase.auth().currentUser;
+                        firebase.database().ref('userDB/' + userId.uid).set({ followedBy: { followedByInt: 0 }, following: { followingInt: 0 }, uploads: 0, wallpaperLiked: 0 });
+                    firebase.storage().ref('profilePicture/icon-user-default.png').getDownloadURL().then(function (url) {
+                        userId.updateProfile({ photoURL: url });
+                        });
                     ons.notification.alert('Account created !');
                     }, function (error) {
-                        ons.notification.alert(error);
+                        ons.notification.alert("Can't send Email for verification ! Re-try sending the mail underprofile page");
                     });
                 })
                 .catch(function (error) {
@@ -195,29 +198,30 @@ var onClickData = function (data) {
                             }
                             else {
                                 //display wallpaper
-                                mainwall.appendChild(ons._util.createElement('<div><ons-list-item ripple  modifier="longdivider" style="padding-bottom:0px;padding-top:0px;"><div class="left"><img class="list__item__thumbnail" src="http://placekitten.com/g/40/40"></div>'
-                                +'<div class="center"><span class="list__item__title"><b class="' + data.val().uid + 'User">' + data.val().uname + '</b></span><span class="list__item__subtitle">Followers : ' + followersLoop.val().followedByInt + '</span>'
-                                + '</div><div class="right" style="opacity:0.75;"><ons-icon icon="md-thumb-up" /><b id="' + data.key + 'Likes"> 0 </b></div></ons-list-item>'
-                                + '<ons-list-item ripple style="padding:0px 0px 0px 0px;" modifier="nodivider">'
-                                + '<div class="center" style="padding:0px 0px 0px 0px;"><img style="max-width:100%;width:100%;" src="' + url + '" alt="Loading....." />'
-                                +'<ons-button modifier="large" style="-webkit-border-radius: 0px;-webkit-box-shadow: 0 0px 0px 0 ;width:20%;" id="' + data.key + 'OnLike"><ons-icon icon="md-thumb-up" /></ons-button>'
-                                +'<ons-button modifier="large" style="-webkit-border-radius: 0px;-webkit-box-shadow: 0 0px 0px 0 ;width:65%;" id="' + data.key + 'OnDownload"><a style="text-decoration: none;color:inherit;" href="' + url + '" download="' + data.key + '" ><ons-icon icon="md-download" /></a></ons-button>'
-                                + '<ons-button modifier="large" style="-webkit-border-radius: 0px;-webkit-box-shadow: 0 0px 0px 0 ;width:15%;" id="' + data.key + 'OnReport"><ons-icon icon="fa-flag" /></ons-button></div></ons-list-item></div>'));
-  
+                                firebase.storage().ref('profilePicture/' + data.val().uid + '/dp.jpeg').getDownloadURL().then(function (urlDP) {
+                                    mainwall.appendChild(ons._util.createElement('<div><ons-list-item ripple  modifier="longdivider" style="padding-bottom:0px;padding-top:0px;"><div class="left"><img class="list__item__thumbnail" src="' + urlDP + '"></div>'
+                                    + '<div class="center"><span class="list__item__title"><b class="' + data.val().uid + 'User">' + data.val().uname + '</b></span><span class="list__item__subtitle">Followers : ' + followersLoop.val().followedByInt + '</span>'
+                                    + '</div><div class="right" style="opacity:0.75;"><ons-icon icon="md-thumb-up" /><b id="' + data.key + 'Likes"> 0 </b></div></ons-list-item>'
+                                    + '<ons-list-item ripple style="padding:0px 0px 0px 0px;" modifier="nodivider">'
+                                    + '<div class="center" style="padding:0px 0px 0px 0px;"><img style="max-width:100%;width:100%;" src="' + url + '" alt="Loading....." />'
+                                    + '<ons-button modifier="large" style="-webkit-border-radius: 0px;-webkit-box-shadow: 0 0px 0px 0 ;width:20%;" id="' + data.key + 'OnLike"><ons-icon icon="md-thumb-up" /></ons-button>'
+                                    + '<ons-button modifier="large" style="-webkit-border-radius: 0px;-webkit-box-shadow: 0 0px 0px 0 ;width:65%;" id="' + data.key + 'OnDownload"><a style="text-decoration: none;color:inherit;" href="' + url + '" download="' + data.key + '" ><ons-icon icon="md-download" /></a></ons-button>'
+                                    + '<ons-button modifier="large" style="-webkit-border-radius: 0px;-webkit-box-shadow: 0 0px 0px 0 ;width:15%;" id="' + data.key + 'OnReport"><ons-icon icon="fa-flag" /></ons-button></div></ons-list-item></div>'));
+                                
                                 page.querySelector('#' + data.key + 'Likes').innerHTML = " " + data.val().likes;
                                 if (userId.emailVerified)
                                 {
-                                    console.log('Email is verified');
+                                    console.log('Email is verified at Home Wall');
                                 }
                                 else
                                 {
                                     page.querySelector('#' + data.key + 'OnLike').setAttribute("disabled", "true");
                                     page.querySelector('#' + data.key + 'OnDownload').setAttribute("disabled", "true");
                                     page.querySelector('#' + data.key + 'OnReport').setAttribute("disabled", "true");
-                                    console.log('Email is not verified');
+                                    console.log('Email is not verified at Home Wall');
 
                                 }
-                                //TODO
+                                
                                 //onProfile Click                         
                                                                
                                 var profileClassId = document.getElementsByClassName(data.val().uid + "User");
@@ -227,7 +231,7 @@ var onClickData = function (data) {
                                     
                                     profileClassId[i].onclick = function ()
                                     {
-                                        onClickData(data);                                        
+                                        onClickData(data);
                                         document.querySelector('#mainNavigator').pushPage('profile.html');
                                     }
                                 };
@@ -237,14 +241,18 @@ var onClickData = function (data) {
                                         document.getElementById('profileUsername').innerHTML = onClickDataVar.val().uname;
                                         firebase.database().ref('/userDB/' + onClickDataVar.val().uid + '/followedBy/followedByInt').once('value').then(function (profileData) {
                                             document.getElementById('profileFollowers').innerHTML = "Followers : " + profileData.val();
-                                       
-                                            firebase.database().ref('/userDB/' + userId.uid + '/following/' + onClickDataVar.val().uid).once('value').then(function (checkiffolwing) {
-                                                if (checkiffolwing.val() === null) {
-
+                                            document.getElementById('profileDPView').setAttribute('src', onClickDataVar.val().photoURL);
+                                            firebase.database().ref('/userDB/' + userId.uid + '/following/' + onClickDataVar.val().uid).once('value').then(function (checkiffolwing) {  
+                                                if (checkiffolwing.val() === null) {                                                   
                                                     document.getElementById('followBtn').onclick = function () {
                                                    
                                                         firebase.database().ref('/userDB/' + userId.uid + '/following/' + onClickDataVar.val().uid).set(true);
                                                         console.log("setting follwing in current user");
+                                                        firebase.database().ref('/userDB/' + userId.uid + '/following/followingInt').once('value').then(function (followingpp)
+                                                        {
+                                                            firebase.database().ref('/userDB/' + userId.uid + '/following/followingInt').set(followingpp.val() + 1);
+                                                            console.log("setting follwingInt in current user");
+                                                        });
                                                         firebase.database().ref('/userDB/' + onClickDataVar.val().uid + '/followedBy/' + userId.uid).set(true);
                                                         console.log("setting follwed by in profile user");
                                                         firebase.database().ref('/userDB/' + onClickDataVar.val().uid + '/followedBy/followedByInt').set(profileData.val() + 1);
@@ -260,7 +268,7 @@ var onClickData = function (data) {
                                         });
                                     }
                                 });
-                                //TODO
+                                
                                 // onLike Click
                                 page.querySelector('#' + data.key + 'OnLike').onclick = function ()
                                 {
@@ -325,6 +333,7 @@ var onClickData = function (data) {
                                         };
                                     });
                                 }
+                                });
                             }
                         });
                     }).catch(function (error)
@@ -408,7 +417,7 @@ var onClickData = function (data) {
                             //get current user
                             var userId = firebase.auth().currentUser;
                             //set wallpaper on db    
-                            firebase.database().ref('wallpaperDB/' + newPostKey + '/').set({ uname: userId.displayName, uid: userId.uid, likes: 1 });
+                            firebase.database().ref('wallpaperDB/' + newPostKey + '/').set({ uname: userId.displayName, uid: userId.uid, likes: 1, photoURL: userId.photoURL });
                             //set wallpaper on userdb
                             firebase.database().ref('userDB/' + userId.uid + '/uploads/' + newPostKey).set(true);
                             firebase.database().ref('userDB/' + userId.uid + '/wallpaperLiked/' + newPostKey).set(true);
@@ -440,12 +449,58 @@ var onClickData = function (data) {
         //Navigator
         nav();
 
-        var user = firebase.auth().currentUser;
-        var username = user.displayName;
-        page.querySelector('#my-username').innerHTML = username;
+        var userId = firebase.auth().currentUser;
+        page.querySelector('#my-username').innerHTML = userId.displayName;
+        console.log(userId.uid);
+        firebase.database().ref('/userDB/' + userId.uid + '/followedBy/followedByInt').once('value').then(function (data)
+        {
+            page.querySelector('#my-followedBy').innerHTML = data.val();
 
+        });
+        firebase.database().ref('/userDB/' + userId.uid + '/following/followingInt').once('value').then(function (data) {
+            page.querySelector('#my-following').innerHTML = data.val();
+
+        });
+
+            page.querySelector('#profile-image-DP').setAttribute("src", userId.photoURL);
+   
+        //Upload DP
+        document.getElementById('profileDPUpload').onchange = function () {
+
+            document.getElementById('uploadingDialog').show();
+
+            var fileTBU = page.querySelector('#profileDPUpload').files[0];
+            if (fileTBU) {
+
+                        var progressBar = page.querySelector('#progessBar');
+                        var stroageRef = firebase.storage().ref('profilePicture/' + userId.uid + '/dp.jpeg');
+                        var task = stroageRef.put(fileTBU);
+                        task.on('state_changed', function (snapshot) {
+                            var per = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                            progessBar.value = per;
+                        }, function (error) {
+                            document.getElementById('uploadingDialog').hide();
+                            ons.notification.alert("An error has occurred!</br>" + error);
+                        }, function () {
+                            firebase.storage().ref('profilePicture/' + userId.uid + '/dp.jpeg').getDownloadURL().then(function (url)
+                            {
+                                userId.updateProfile({ photoURL: url });
+                                
+                                page.querySelector('#profile-image-DP').setAttribute("src", url);
+                            });
+                            document.getElementById('uploadingDialog').hide();
+                          
+                        });                                 
+
+            }
+            else {               
+                document.getElementById('uploadingDialog').hide();
+            }
+        };
+
+        //Logout
         page.querySelector('#logoutBtn').onclick = function () {
-            //Logout
+            
             firebase.auth().signOut().then(function () {
                 ons.notification.confirm("Logout Successful");
                 document.querySelector('#mainNavigator').pushPage('login.html');
@@ -453,6 +508,7 @@ var onClickData = function (data) {
                 ons.notification.alert("Error ! Try again");
             });
         };
+
         //Logout End
     }
     else if (page.id === 'profile') {
@@ -478,141 +534,142 @@ var onClickData = function (data) {
         function uwallEngine() {
 
             var userId = firebase.auth().currentUser;
+            
             firebase.database().ref("wallpaperDB/").orderByChild('likes').on("child_added", function (data) {
                 firebase.storage().ref('wid/' + data.key + '.jpeg').getDownloadURL().then(function (url) {
                     firebase.database().ref('/userDB/' + userId.uid + '/wallpaperLiked/' + data.key).once('value').then(function (snapshot) {
-                        firebase.database().ref('/userDB/' + data.val().uid + '/followedBy/').on('value', function (followersLoop) {
-                            if (snapshot.val() == true) {
-                                uwall.appendChild(ons._util.createElement('<div><ons-list-item ripple  modifier="longdivider" style="padding-bottom:0px;padding-top:0px;"><div class="left"><img class="list__item__thumbnail" src="http://placekitten.com/g/40/40"></div>'
-                                +'<div class="center"><span class="list__item__title"><b class="' + data.val().uid + 'Likes">' + data.val().uname + '</b></span><span class="list__item__subtitle">Followers : ' + followersLoop.val().followedByInt + '</span>'
-                                + '</div><div class="right" style="opacity:0.75;"><ons-icon icon="md-thumb-up" /><b id="' + data.key + 'Likes"> 0 </b></div></ons-list-item>' +
-                                '<ons-list-item ripple style="padding:0px 0px 0px 0px;" modifier="nodivider">' +
-                                '<div class="center" style="padding:0px 0px 0px 0px;"><img style="max-width:100%;width:100%;" src="' + url + '" alt="Loading....." />' +
-                                '<ons-button modifier="large" style="-webkit-border-radius: 0px;-webkit-box-shadow: 0 0px 0px 0 ;width:85%;" id="' + data.key + 'OnDownload"><a style="text-decoration: none;color:inherit;" href="' + url + '" download="' + data.key + '" ><ons-icon icon="md-download" /></a></ons-button>' +
-                                '<ons-button modifier="large" style="-webkit-border-radius: 0px;-webkit-box-shadow: 0 0px 0px 0 ;width:15%;" id="' + data.key + 'OnReport"><ons-icon icon="fa-flag" /></ons-button></div></ons-list-item></div>'));
-                               page.querySelector('#' + data.key + 'Likes').innerHTML = " " + data.val().likes;
-                            }
-                            else {
-                                //Ignore Likes
+                        firebase.database().ref('/userDB/' + data.val().uid + '/followedBy/').on('value', function (followersLoop) {                           
+                            if (snapshot.val() === true) {
+                                firebase.storage().ref('profilePicture/' + data.val().uid + '/dp.jpeg').getDownloadURL().then(function (urlDP) {                                                       
+                                    uwall.appendChild(ons._util.createElement('<div><ons-list-item ripple  modifier="longdivider" style="padding-bottom:0px;padding-top:0px;"><div class="left"><img class="list__item__thumbnail" src="'+ urlDP +'"></div>'
+                                    +'<div class="center"><span class="list__item__title"><b class="' + data.val().uid + 'Likes">' + data.val().uname + '</b></span><span class="list__item__subtitle">Followers : ' + followersLoop.val().followedByInt + '</span>'
+                                    + '</div><div class="right" style="opacity:0.75;"><ons-icon icon="md-thumb-up" /><b id="' + data.key + 'Likes"> 0 </b></div></ons-list-item>' +
+                                    '<ons-list-item ripple style="padding:0px 0px 0px 0px;" modifier="nodivider">' +
+                                    '<div class="center" style="padding:0px 0px 0px 0px;"><img style="max-width:100%;width:100%;" src="' + url + '" alt="Loading....." />' +
+                                    '<ons-button modifier="large" style="-webkit-border-radius: 0px;-webkit-box-shadow: 0 0px 0px 0 ;width:85%;" id="' + data.key + 'OnDownload"><a style="text-decoration: none;color:inherit;" href="' + url + '" download="' + data.key + '" ><ons-icon icon="md-download" /></a></ons-button>' +
+                                    '<ons-button modifier="large" style="-webkit-border-radius: 0px;-webkit-box-shadow: 0 0px 0px 0 ;width:15%;" id="' + data.key + 'OnReport"><ons-icon icon="fa-flag" /></ons-button></div></ons-list-item></div>'));
+                                    page.querySelector('#' + data.key + 'Likes').innerHTML = " " + data.val().likes;
 
-                            }
-                            if (userId.emailVerified) {}
-                            else {
-                                document.getElementById(data.key + 'OnReport').setAttribute("disabled", "");
-                            }
+                                    if (userId.emailVerified) {
+                                        console.log("Email verified at Upload Wall");
+                                    }
+                                    else {
+                                        console.log("Email not verified at Upload Wall");
+                                        page.querySelector('#'+data.key + 'OnReport').setAttribute("disabled", "");
+                                    }
 
 
-                            //onProfile Click                         
+                                    //onProfile Click                         
 
-                            var profileClassId = document.getElementsByClassName(data.val().uid + "Likes");
+                                    var profileClassId = document.getElementsByClassName(data.val().uid + "Likes");
 
-                            for (var i = 0; i < profileClassId.length; i++) {
+                                    for (var i = 0; i < profileClassId.length; i++) {
 
-                                profileClassId[i].onclick = function () {
-                                    onClickData(data);
-                                    document.querySelector('#mainNavigator').pushPage('profile.html');
-                                }
-                            };
-                            document.addEventListener("show", function (event) {
-                                if (event.target.id === 'profile') {
-                                    document.getElementById('profileUsername').innerHTML = onClickDataVar.val().uname;
-                                    firebase.database().ref('/userDB/' + onClickDataVar.val().uid + '/followedBy/followedByInt').once('value').then(function (profileData) {
-                                        document.getElementById('profileFollowers').innerHTML = "Followers : " + profileData.val();
+                                        profileClassId[i].onclick = function () {
+                                            onClickData(data);
+                                            document.querySelector('#mainNavigator').pushPage('profile.html');
+                                        }
+                                    };
+                                    document.addEventListener("show", function (event) {
+                                        if (event.target.id === 'profile') {
+                                            document.getElementById('profileUsername').innerHTML = onClickDataVar.val().uname;
+                                            firebase.database().ref('/userDB/' + onClickDataVar.val().uid + '/followedBy/followedByInt').once('value').then(function (profileData) {
+                                                document.getElementById('profileFollowers').innerHTML = "Followers : " + profileData.val();
+                                                document.getElementById('profileDPView').setAttribute('src', onClickDataVar.val().photoURL);
+                                                firebase.database().ref('/userDB/' + userId.uid + '/following/' + onClickDataVar.val().uid).once('value').then(function (checkiffolwing) {
+                                                    if (checkiffolwing.val() === null) {
+                                                        document.getElementById('followBtn').onclick = function () {
 
-                                        firebase.database().ref('/userDB/' + userId.uid + '/following/' + onClickDataVar.val().uid).once('value').then(function (checkiffolwing) {
-                                            if (checkiffolwing.val() === null) {
+                                                            firebase.database().ref('/userDB/' + userId.uid + '/following/' + onClickDataVar.val().uid).set(true);
+                                                            console.log("setting follwing in current user");
+                                                            firebase.database().ref('/userDB/' + onClickDataVar.val().uid + '/followedBy/' + userId.uid).set(true);
+                                                            console.log("setting follwed by in profile user");
+                                                            firebase.database().ref('/userDB/' + onClickDataVar.val().uid + '/followedBy/followedByInt').set(profileData.val() + 1);
+                                                            console.log("setting follwedbyInt in profile user");
+                                                            this.setAttribute("disabled", "true");
+                                                        }
 
-                                                document.getElementById('followBtn').onclick = function () {
-
-                                                    firebase.database().ref('/userDB/' + userId.uid + '/following/' + onClickDataVar.val().uid).set(true);
-                                                    console.log("setting follwing in current user");
-                                                    firebase.database().ref('/userDB/' + onClickDataVar.val().uid + '/followedBy/' + userId.uid).set(true);
-                                                    console.log("setting follwed by in profile user");
-                                                    firebase.database().ref('/userDB/' + onClickDataVar.val().uid + '/followedBy/followedByInt').set(profileData.val() + 1);
-                                                    console.log("setting follwedbyInt in profile user");
-                                                    this.setAttribute("disabled", "true");
-                                                }
-
-                                            }
-                                            else if (checkiffolwing.val() === true) {
-                                                document.getElementById('followBtn').setAttribute("disabled", "true");
-                                            }
-                                        });
+                                                    }
+                                                    else if (checkiffolwing.val() === true) {
+                                                        document.getElementById('followBtn').setAttribute("disabled", "true");
+                                                    }
+                                                });
+                                            });
+                                        }
                                     });
-                                }
-                            });
                             
 
 
-                            //OnDownload Click
-                            document.getElementById(data.key + 'OnDownload').onclick = function () {
-                                var dialog = page.querySelector('#downloadingid');
+                                    //OnDownload Click
+                                    document.getElementById(data.key + 'OnDownload').onclick = function () {
+                                        var dialog = page.querySelector('#downloadingid');
 
-                                if (dialog) {
-                                    dialog.show();
-                                    dialog.hide();
+                                        if (dialog) {
+                                            dialog.show();
+                                            dialog.hide();
 
+                                        }
+                                        else {
+                                            ons.createDialog('downloading.html')
+                                            .then(function (dialog) {
+                                                dialog.show();
+                                                dialog.hide();
+                                            });
+                                        }
+                                        var fileTransfer = new FileTransfer();
+
+                                        var fileURL = "///storage/emulated/0/MyWallpapers/wall" + data.key + ".jpeg";
+
+                                        fileTransfer.download(
+                                           url, fileURL, function (entry) {
+
+                                               ons.notification.confirm("Download completed");
+                                           },
+
+                                           function (error) {
+
+                                               ons.notification.confirm("Download error source :" + error.source);
+                                               ons.notification.confirm("Download error target :" + error.target);
+                                               ons.notification.confirm("Download error code :" + error.code);
+                                           },
+
+                                           false, {
+                                               headers: {
+                                                   "Authorization": "Basic dGVzdHVzZXJuYW1lOnRlc3RwYXNzd29yZA=="
+                                               }
+                                           }
+                                        );
+
+                                    }
+                                    // onReport Click
+                                    document.getElementById(data.key + 'OnReport').onclick = function () {
+                                        ons.createDialog('report.html')
+                                        .then(function (dialog) {
+                                            dialog.show();
+
+                                            document.getElementById('reportBtn').onclick = function () {
+                                                dialog.hide();
+                                                var copyvio = document.getElementById('radio-1').value;
+                                                var spam = document.getElementById('radio-2').value;
+                                                var offence = document.getElementById('radio-3').value;
+                                       
+                                            };
+                                        });
+                                    }
+                                
+                                });
                                 }
                                 else {
-                                    ons.createDialog('downloading.html')
-                                    .then(function (dialog) {
-                                        dialog.show();
-                                        dialog.hide();
-                                    });
-                                }
-                                var fileTransfer = new FileTransfer();
-
-                                var fileURL = "///storage/emulated/0/MyWallpapers/wall" + data.key + ".jpeg";
-
-                                fileTransfer.download(
-                                   url, fileURL, function (entry) {
-
-                                       ons.notification.confirm("Download completed");
-                                   },
-
-                                   function (error) {
-
-                                       ons.notification.confirm("Download error source :" + error.source);
-                                       ons.notification.confirm("Download error target :" + error.target);
-                                       ons.notification.confirm("Download error code :" + error.code);
-                                   },
-
-                                   false, {
-                                       headers: {
-                                           "Authorization": "Basic dGVzdHVzZXJuYW1lOnRlc3RwYXNzd29yZA=="
-                                       }
-                                   }
-                                );
-
-                            }
-                            // onReport Click
-                            document.getElementById(data.key + 'OnReport').onclick = function () {
-                                ons.createDialog('report.html')
-                                .then(function (dialog) {
-                                    dialog.show();
-
-                                    document.getElementById('reportBtn').onclick = function () {
-                                        dialog.hide();
-                                        var copyvio = document.getElementById('radio-1').value;
-                                        var spam = document.getElementById('radio-2').value;
-                                        var offence = document.getElementById('radio-3').value;
-                                       
-                                    };
-                                });
+                                //Ignore Likes
                             }
 
-
+                       
 
                         });
                     }).catch(function (error) {
                         console.log("Fetch Validating Error:" + error);
                     });
-
-
-
-
                 }).catch(function (error) { console.log("Stroage Fetching error :" + error); });
-
             });
         }
 
