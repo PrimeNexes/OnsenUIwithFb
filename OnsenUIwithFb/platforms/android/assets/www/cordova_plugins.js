@@ -225,7 +225,7 @@ module.exports.metadata =
     "cordova-plugin-file": "4.3.0",
     "cordova-plugin-file-transfer": "1.6.0",
     "cordova-plugin-network-information": "1.3.0",
-    "cordova-plugin-wallpaper": "0.1.0"
+    "cordova-plugin-wallpaper": "0.1.1"
 };
 // BOTTOM OF METADATA
 });

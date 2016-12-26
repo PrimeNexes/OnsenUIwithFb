@@ -50,5 +50,5 @@
   <plugin name="cordova-plugin-network-information" version="1.3.0" />
   <preference name="android-minSdkVersion" value="21" />
   <preference name="android-targetSdkVersion" value="21" />
-  <plugin name="cordova-plugin-wallpaper" version="0.1.0" />
+  <plugin name="cordova-plugin-wallpaper" version="0.1.1" src="https://github.com/fbsanches/cordova-plugin-wallpaper.git" />
 </widget>

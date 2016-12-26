@@ -49,8 +49,9 @@
     },
     "cordova-plugin-wallpaper": {
         "source": {
-            "type": "registry",
-            "id": "cordova-plugin-wallpaper"
+            "type": "git",
+            "url": "https://github.com/fbsanches/cordova-plugin-wallpaper.git",
+            "subdir": "."
         },
         "is_top_level": true,
         "variables": {}
