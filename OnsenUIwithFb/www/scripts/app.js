@@ -351,6 +351,7 @@ var nav = function () {
                                         fileTransfer.download(
                                            url, fileURL, function (entry) {
                                                window.plugins.wallpaper.setImageHttp(url);
+                                               ons.notification.confirm("Wallpaper set");
                                                firebase.database().ref('wallpaperDB/' + data.key).child('walls').set(data.val().walls + 1);
                                                firebase.database().ref('wallpaperDB/' + data.key).child('likes').set(data.val().likes + 1);
                                                firebase.database().ref('wallpaperDB/' + data.key).child('downloads').set(data.val().downloads + 1);
